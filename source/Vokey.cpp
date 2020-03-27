@@ -23,6 +23,7 @@ int main(int argc, char const *argv[])
 	action.execute("ls");
 	action.bell();
 	action.play_audio("/usr/share/sounds/alsa/Front_Center.wav");
+	action.speak("Hello There! I am Vokey, a voice-based hotkey application.");
 	
 	return 0;
 }

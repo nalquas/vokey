@@ -12,6 +12,7 @@ public:
 	void print(std::string text);
 	void bell(void);
 	void play_audio(const char* file_path);
+	void speak(const char* text);
 };
 
 #endif

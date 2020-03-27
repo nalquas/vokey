@@ -22,3 +22,12 @@ void Action::play_audio(const char* file_path) {
 	strcat(buf, file_path);
 	execute(buf);
 }
+
+void Action::speak(const char* text) {
+	// TODO: Directly interface Festival or Flite; Flite would be less resource-intensive, but incompatible with ALSA...
+	char buf[4096];
+	strcpy(buf, "echo \"");
+	strcat(buf, text);
+	strcat(buf, "\" | festival --tts");
+	execute(buf);
+}

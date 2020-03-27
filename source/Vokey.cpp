@@ -4,17 +4,23 @@
 #include <iostream>
 
 // Classes
+#include "Action.h"
 #include "VoiceRecognizer.h"
+
+Action action;
 
 int main(int argc, char const *argv[])
 {
-	std::cout << "Testing VoiceRecognizer...\n";
-
+	// Test: VoiceRecognizer
+	std::cout << "\nTesting VoiceRecognizer...\n";
 	VoiceRecognizer vr(raw);
-
 	if (vr.process_file("goforward.raw") != 0) return -1;
-
 	std::cout << "Text: " << vr.get_text() << "\n";
 
+	// Test: Action
+	std::cout << "\nTesting Action...\n";
+	action.print("Hello world, this is a print action.");
+	action.execute("ls");
+	
 	return 0;
 }

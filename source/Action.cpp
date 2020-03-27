@@ -20,6 +20,7 @@ void Action::play_audio(const char* file_path) {
 	char buf[4096];
 	strcpy(buf, "aplay ");
 	strcat(buf, file_path);
+	strcat(buf, " &");
 	execute(buf);
 }
 
@@ -28,6 +29,6 @@ void Action::speak(const char* text) {
 	char buf[4096];
 	strcpy(buf, "echo \"");
 	strcat(buf, text);
-	strcat(buf, "\" | festival --tts");
+	strcat(buf, "\" | festival --tts &");
 	execute(buf);
 }

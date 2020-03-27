@@ -8,7 +8,13 @@
 
 int main(int argc, char const *argv[])
 {
-	std::cout << "Hello World, I am Vokey!\n";
+	std::cout << "Testing VoiceRecognizer...\n";
+
+	VoiceRecognizer vr(raw);
+
+	if (vr.process_file("goforward.raw") != 0) return -1;
+
+	std::cout << "Text: " << vr.get_text() << "\n";
 
 	return 0;
 }

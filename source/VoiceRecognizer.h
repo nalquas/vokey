@@ -11,17 +11,26 @@ enum recognition_types {
 
 class VoiceRecognizer {
 public:
+	// Constructor, Destructor
 	VoiceRecognizer(int type);
 	~VoiceRecognizer(void);
-	void start(void);
+	
+	// Interfacing methods
+	int process_file(const char* file_path);
+	std::string get_text(void);
+	int get_score(void);
 private:
-	ps_decoder_t *ps;
-	cmd_ln_t *config;
-	FILE *fh;
-	char const *hyp, *uttid;
-	int16 buf[512];
-	int rv;
-	int32 score;
+	// Results:
+	std::string _text = "";
+	int _score = 0;
+	
+	// Decoder variables:
+	ps_decoder_t *_ps = NULL;
+	cmd_ln_t *_config = NULL;
+	FILE *_fh = NULL;
+	char const *_hyp = "";
+	int16 _buf[512];
+	int _rv = 0;
 };
 
 #endif

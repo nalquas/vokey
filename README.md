@@ -10,7 +10,7 @@ You need to have the following libraries installed to compile Vokey:
 - Sphinxbase
 - Qt5
 
-To compile, simply execute:
+To compile the project, simply execute:
 
 ```
 make
@@ -21,8 +21,16 @@ Vokey currently requires several terminal commands to be available for its actio
 Namely, these are `aplay` and `festival`.
 
 ## Usage
-Run:
+Vokey is split into two sub-programs.
+
+The main program is a service reacting to your voice and acting according to a selected profile, executed using:
 
 ```
-./vokey.out
+./vokey_service.out
+```
+
+The second program is a GUI-based manager used to configure the service:
+
+```
+./vokey_manager.out
 ```

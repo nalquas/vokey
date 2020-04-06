@@ -1,14 +1,15 @@
 # vokey
 Vokey is a voice-based hotkey program.
-The goal is to have an application that, when configured voice commands are given, executes macros.
-This would be a cool thing to have in games, thus possible actions should not just include executing scripts or playing sounds, but sending inputs to the game windows through X.
+
+The goal is to have an easily manageable application executing macros when voice commands are given.
+The planned use case is gaming - Imagine flying a spaceship and just being able to command your vessel by speech.
 
 ## Compilation
-You need to have the following libraries installed to compile Vokey:
+You need to have the following libraries installed to your system to compile Vokey:
 
-- Pocketsphinx
-- Sphinxbase
-- Qt5
+- [JSON for Modern C++](https://github.com/nlohmann/json)
+- [Pocketsphinx](https://github.com/cmusphinx/pocketsphinx) and [Sphinxbase](https://github.com/cmusphinx/sphinxbase)
+- [Qt5](https://www.qt.io/download-open-source)
 
 To compile the project, simply execute:
 

@@ -1,6 +1,3 @@
 # Ignore compiled binaries
 **/*.o
 **/*.out
-
-# Ignore Visual Studio Code
-**/.vscode/**

@@ -38,9 +38,11 @@ public:
 	
 	// Interfacing methods
 	void load_profile(const char* file_path);
+	int run(void);
 private:
 	Action _action;
 	json _profile;
+	VoiceRecognizer _vr = *(new VoiceRecognizer(raw));
 };
 
 #endif

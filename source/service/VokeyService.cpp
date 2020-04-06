@@ -26,20 +26,5 @@ EventRecognizer er;
 int main(int argc, char const *argv[])
 {
 	er.load_profile("default_profile.json");
-
-	/*// Test: VoiceRecognizer
-	std::cout << "\nTesting VoiceRecognizer...\n";
-	VoiceRecognizer vr(raw);
-	if (vr.process_file("goforward.raw") != 0) return -1;
-	std::cout << "Text: " << vr.get_text() << "\n";
-
-	// Test: Action
-	std::cout << "\nTesting Action...\n";
-	action.print("Hello world, this is a print action.");
-	action.execute("ls");
-	action.bell();
-	action.play_audio("/usr/share/sounds/alsa/Front_Center.wav");
-	action.speak("Hello There! I am Vokey, a voice-based hotkey application.");*/
-	
-	return 0;
+	return er.run();
 }

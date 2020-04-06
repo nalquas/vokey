@@ -1,5 +1,14 @@
-# vokey
-Vokey is a voice-based hotkey program.
+# Vokey
+```
+.          .  __________   __    _____  ___________  __      __
+|\        /| /   ____   \ |  |  /  __/ /   _______/ |  |    |  |
+| \      / | |  /    \  | |  \_/  /    |  |______   |  |    |  |
+\  \    /  / | /      \ | |      /     |   ______|  \  \____/  |
+ \  \  /  /  | \      / | |   _  \     |  |          \______   |
+  \  \/  /   |  \____/  | |  / \  \__  |  |_______    ______\  |
+   \____/    \__________/ |__|   \___\ \__________\  /_________/
+```
+Vokey is a voice-based hotkey application.
 
 The goal is to have an easily manageable application executing macros when voice commands are given.
 The planned use case is gaming - Imagine flying a spaceship and just being able to command your vessel by speech.

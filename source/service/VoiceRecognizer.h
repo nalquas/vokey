@@ -1,8 +1,10 @@
 #ifndef VoiceRecognizer_h
 #define VoiceRecognizer_h
 
-#include <pocketsphinx.h>
 #include <iostream>
+#include <pocketsphinx.h>
+
+using namespace std;
 
 // Types of voice recognition procedures
 enum recognition_types {
@@ -17,11 +19,11 @@ public:
 	
 	// Interfacing methods
 	int process_file(const char* file_path);
-	std::string get_text(void);
+	string get_text(void);
 	int get_score(void);
 private:
 	// Results:
-	std::string _text = "";
+	string _text = "";
 	int _score = 0;
 	
 	// Decoder variables:

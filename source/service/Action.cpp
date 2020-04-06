@@ -3,16 +3,16 @@
 Action::Action() {}
 
 void Action::execute(const char* command) {
-	std::cout << "\nExecuting: " << command << "\n";
+	cout << "\nExecuting: " << command << "\n";
 	system(command);
 }
 
-void Action::print(std::string text) {
-	std::cout << "\n" << text << "\n";
+void Action::print(string text) {
+	cout << "\n" << text << "\n";
 }
 
 void Action::bell() {
-	std::cout << '\a';
+	cout << '\a';
 }
 
 void Action::play_audio(const char* file_path) {

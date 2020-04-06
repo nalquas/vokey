@@ -1,0 +1,17 @@
+{
+	"name": "Default Profile",
+	"description": "This is the default profile.",
+	"events": [
+		{
+			"title": "Example Event",
+			"description": "This is an example event.",
+			"commands": ["example", "test event", "trigger test"],
+			"actions": [
+				{
+					"type": "tts",
+					"text": "You have triggered the example event. Congratulations, it is working!"
+				}
+			]
+		}
+	]
+}

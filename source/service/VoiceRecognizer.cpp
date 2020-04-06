@@ -57,7 +57,7 @@ int VoiceRecognizer::process_file(const char* file_path) {
 	return 0;
 }
 
-std::string VoiceRecognizer::get_text() {
+string VoiceRecognizer::get_text() {
 	return _text;
 }
 

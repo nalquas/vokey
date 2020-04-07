@@ -77,12 +77,12 @@ int VoiceRecognizer::process_microphone() {
 	}
 
 	cout << "Finished recording\n";
+	pa_simple_flush(_pulse, NULL);
 	
 	_rv = ps_end_utt(_ps);
 	_hyp = ps_get_hyp(_ps, &_score);
 	_text = _hyp;
 	
-	pa_simple_flush(_pulse, NULL);
 	ps_free(_ps);
 	_ps = NULL;
 	return 0;

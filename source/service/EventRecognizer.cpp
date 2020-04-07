@@ -29,19 +29,31 @@ EventRecognizer::~EventRecognizer() {
 }
 
 int EventRecognizer::run() {
-	// Test: VoiceRecognizer
-	cout << "\nTesting VoiceRecognizer...\n";
-	if (_vr.process_microphone() != 0) return -1;
-	cout << "Text: " << _vr.get_text() << "\n";
+	for (;;) {
+		// Voice processing
+		if (_vr.process_microphone() != 0) return -1;
 
-	// Test: Action
-	/*cout << "\nTesting Action...\n";
-	_action.print("Hello world, this is a print action.");
-	_action.execute("ls");
-	_action.bell();
-	_action.play_audio("/usr/share/sounds/alsa/Front_Center.wav");
-	_action.speak("Hello There! I am Vokey, a voice-based hotkey application.");*/
+		// Text handling
+		cout << "Text: " << _vr.get_text() << "\nScore: " << _vr.get_score() << "\n";
 
+		// This is a test event-like thing:
+		if (strstr(_vr.get_text().c_str(), "test")) {
+			cout << "\nTesting Action...\n";
+			_action.print("Hello world, this is a print action.");
+			_action.execute("ls");
+			_action.bell();
+			_action.play_audio("/usr/share/sounds/alsa/Front_Center.wav");
+			_action.speak("Hello There! I am Vokey, a voice-based hotkey application.");
+		}
+
+		// This is a test quit event
+		if (strstr(_vr.get_text().c_str(), "quit")) {
+			cout << "\nQuitting...\n";
+			return 0;
+		}
+	}
+
+	// Unreachable
 	return 0;
 }
 

@@ -43,7 +43,7 @@ private:
 	ps_decoder_t *_ps = NULL;
 	cmd_ln_t *_config = NULL;
 	char const *_hyp = "";
-	int16 _buf[512];
+	int16 _buf[2048];
 	int _rv = 0;
 
 	// Pulseaudio:

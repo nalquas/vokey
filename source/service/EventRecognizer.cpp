@@ -31,16 +31,16 @@ EventRecognizer::~EventRecognizer() {
 int EventRecognizer::run() {
 	// Test: VoiceRecognizer
 	cout << "\nTesting VoiceRecognizer...\n";
-	if (_vr.process_file("goforward.raw") != 0) return -1;
+	if (_vr.process_microphone() != 0) return -1;
 	cout << "Text: " << _vr.get_text() << "\n";
 
 	// Test: Action
-	cout << "\nTesting Action...\n";
+	/*cout << "\nTesting Action...\n";
 	_action.print("Hello world, this is a print action.");
 	_action.execute("ls");
 	_action.bell();
 	_action.play_audio("/usr/share/sounds/alsa/Front_Center.wav");
-	_action.speak("Hello There! I am Vokey, a voice-based hotkey application.");
+	_action.speak("Hello There! I am Vokey, a voice-based hotkey application.");*/
 
 	return 0;
 }

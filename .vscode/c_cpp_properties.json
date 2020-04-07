@@ -9,7 +9,7 @@
                 "/usr/local/lib/**"
             ],
             "defines": [
-                "MODELDIR=/usr/local/share/pocketsphinx/model"
+                "MODELDIR=\"/usr/local/share/pocketsphinx/model\""
             ],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c11",

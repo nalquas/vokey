@@ -42,7 +42,7 @@ public:
 private:
 	Action _action;
 	json _profile;
-	VoiceRecognizer _vr = *(new VoiceRecognizer(raw));
+	VoiceRecognizer _vr;
 };
 
 #endif

@@ -15,10 +15,14 @@ vokey_service.out: source/service/VokeyService.cpp source/service/Action.cpp sou
 	$(COMPILER) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" source/service/VokeyService.cpp  source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service.out
 	chmod +x vokey_service.out
 
-vokey_manager.out: source/manager/VokeyManager.cpp
+vokey_manager.out: source/manager/VokeyManager.cpp source/manager/ui/manager.h
 	$(COMPILER) $(LINKERFLAGS_MANAGER) -fPIC source/manager/VokeyManager.cpp -o vokey_manager.out
 	chmod +x vokey_manager.out
+
+source/manager/ui/manager.h: ui/manager.ui
+	uic -o source/manager/ui/manager.h ui/manager.ui
 
 clean:
 	if test -f "vokey_service.out"; then rm vokey_service.out; fi
 	if test -f "vokey_manager.out"; then rm vokey_manager.out; fi
+	if test -f "source/manager/ui/manager.h"; then rm source/manager/ui/manager.h; fi

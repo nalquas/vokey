@@ -18,10 +18,9 @@
 // Libraries
 #include <iostream>
 #include <QApplication>
-#include <QLabel>
 
-// Classes
-// TODO include classes etc.
+// UI with layout
+#include "ui/manager.h"
 
 using namespace std;
 
@@ -31,9 +30,10 @@ int main(int argc, char **argv)
 
 	QApplication app(argc, argv);
 
-	QWidget window;
+	QMainWindow window;
 
-	QLabel placeholder("VokeyManager has not been implemented yet.", &window);
+	Ui_MainWindow ui;
+	ui.setupUi(&window);
 
 	window.show();
 	return app.exec();

@@ -10,8 +10,10 @@
 ```
 Vokey is a voice-based hotkey application.
 
-The goal is to have an easily manageable application executing macros when voice commands are spoken.
+The goal is to have an easily manageable service executing macros when voice commands are spoken.
 The planned use case is gaming - Imagine flying a spaceship and just being able to command your vessel by speech.
+
+Vokey is intended for use on Linux systems with Pulseaudio.
 
 ## Compilation
 You need to have the following libraries installed to your system to compile Vokey:

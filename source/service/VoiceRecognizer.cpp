@@ -40,6 +40,7 @@ VoiceRecognizer::VoiceRecognizer() {
 	"-hmm", MODELDIR "/en-us/en-us",
 	"-lm", MODELDIR "/en-us/en-us.lm.bin",
 	"-dict", MODELDIR "/en-us/cmudict-en-us.dict",
+	"-logfn", "/dev/null",
 	NULL);
 	if (_config == NULL) {
 		fprintf(stderr, "Failed to create config object, check log.\n");
@@ -60,7 +61,7 @@ VoiceRecognizer::~VoiceRecognizer() {
 int VoiceRecognizer::process_microphone() {
 	_rv = ps_start_utt(_ps);
 	
-	cout << "Starting recording\n";
+	cout << "\nStarting recording\n";
 
 	uint8_t utt_started=FALSE, in_speech=FALSE;
 	while (!(!in_speech && utt_started)) {
@@ -73,8 +74,9 @@ int VoiceRecognizer::process_microphone() {
 			utt_started = TRUE;
 		}
 	}
+	pa_simple_flush(_pulse, NULL);
 
-	cout << "Finished recording\n";
+	cout << "Finished recording\nLatency: " << pa_simple_get_latency(_pulse, NULL) << "\n";
 
 	_rv = ps_end_utt(_ps);
 	_hyp = ps_get_hyp(_ps, &_score);

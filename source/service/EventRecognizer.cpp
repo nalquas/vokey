@@ -39,8 +39,6 @@ int EventRecognizer::run() {
 		// Check for all possible events
 		bool any_event_activated = false;
 		for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
-			cout << "Checking for event " << _profile["events"][i]["title"] << "\n";
-
 			// Check for all possible commands
 			for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
 				if (strstr(_vr.get_text().c_str(), string(_profile["events"][i]["commands"][j]).c_str())) {
@@ -50,10 +48,21 @@ int EventRecognizer::run() {
 					for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
 						switch (get_action_type(string(_profile["events"][i]["actions"][k]["type"])))
 						{
+						case action_execute:
+							_action.execute(string(_profile["events"][i]["actions"][k]["command"]).c_str());
+							break;
+						case action_print:
+							_action.print(string(_profile["events"][i]["actions"][k]["text"]));
+							break;
+						case action_bell:
+							_action.bell();
+							break;
+						case action_play_audio:
+							_action.play_audio(string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
+							break;
 						case action_speak:
 							_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
 							break;
-						
 						default:
 							cout << "Unhandled action type \"" << _profile["events"][i]["actions"][k]["type"] << "\"\n";
 							break;

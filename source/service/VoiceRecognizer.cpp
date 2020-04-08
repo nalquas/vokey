@@ -44,6 +44,10 @@ VoiceRecognizer::VoiceRecognizer() {
 	if (_config == NULL) {
 		fprintf(stderr, "Failed to create config object, check log.\n");
 	}
+	_ps = ps_init(_config);
+	if (_ps == NULL) {
+		fprintf(stderr, "Failed to create recognizer, check log.\n");
+	}
 }
 
 // Destructor
@@ -54,12 +58,6 @@ VoiceRecognizer::~VoiceRecognizer() {
 }
 
 int VoiceRecognizer::process_microphone() {
-	_ps = ps_init(_config);
-	if (_ps == NULL) {
-		fprintf(stderr, "Failed to create recognizer, check log.\n");
-		return -1;
-	}
-	
 	_rv = ps_start_utt(_ps);
 	
 	cout << "Starting recording\n";
@@ -77,14 +75,11 @@ int VoiceRecognizer::process_microphone() {
 	}
 
 	cout << "Finished recording\n";
-	pa_simple_flush(_pulse, NULL);
-	
+
 	_rv = ps_end_utt(_ps);
 	_hyp = ps_get_hyp(_ps, &_score);
 	_text = _hyp;
-	
-	ps_free(_ps);
-	_ps = NULL;
+
 	return 0;
 }
 

@@ -96,11 +96,21 @@ void ensure_config_exists() {
 	}
 }
 
+string get_default_profile_path() {
+	string temp = "";
+
+	ifstream f(config_location + "/config.json");
+	temp.assign( (istreambuf_iterator<char>(f) ), (istreambuf_iterator<char>()));
+	f.close();
+
+	return config_location + "/profiles/" + string(json::parse(temp)["default_profile"]);
+}
+
 int main(int argc, char const *argv[]) {
 	config_location = string(getenv("HOME")) + "/.config/vokey";
 	
 	ensure_config_exists();
 
-	er.load_profile(config_location + "/profiles/default_profile.json");
+	er.load_profile(get_default_profile_path());
 	return er.run();
 }

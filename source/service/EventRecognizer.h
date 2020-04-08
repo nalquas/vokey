@@ -30,6 +30,14 @@
 using namespace std;
 using json = nlohmann::json;
 
+enum action_types {
+	action_execute,
+	action_print,
+	action_bell,
+	action_play_audio,
+	action_speak
+};
+
 class EventRecognizer {
 public:
 	// Constructor, Destructor
@@ -41,6 +49,7 @@ public:
 	void load_profile(const char* file_path);
 	int run(void);
 private:
+	int get_action_type(string s);
 	Action _action;
 	json _profile;
 	VoiceRecognizer _vr;

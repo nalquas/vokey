@@ -78,7 +78,7 @@ void ensure_config_exists() {
 				{
 					{"title", "Example Event"},
 					{"Description", "This is an example event."},
-					{"commands", {"example", "test event", "trigger test"}},
+					{"commands", {"example", "test"}},
 					{"actions", {
 						{
 							{"type", "tts"},

@@ -15,6 +15,8 @@
 // File description:
 // The main source file of Vokey. This is where it all starts. Literally.
 
+#define VOKEY_CONFIG_VERSION 1
+
 // Libraries
 #include <iostream>
 #include <fstream>
@@ -54,6 +56,7 @@ void ensure_config_exists() {
 		cout << "First-time setup, creating default config at \"" << config_path << "\"...\n";
 
 		json cfg = {
+			{"version", VOKEY_CONFIG_VERSION},
 			{"default_profile", "default_profile.json"}
 		};
 

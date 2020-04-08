@@ -17,13 +17,24 @@
 
 // Libraries
 #include <iostream>
+#include <QApplication>
+#include <QLabel>
 
 // Classes
 // TODO include classes etc.
 
-int main(int argc, char const *argv[])
+using namespace std;
+
+int main(int argc, char **argv)
 {
-	std::cout << "VokeyManager has not been implemented yet.\n";
-	
-	return 0;
+	cout << "Launching VokeyManager...\n";
+
+	QApplication app(argc, argv);
+
+	QWidget window;
+
+	QLabel placeholder("VokeyManager has not been implemented yet.", &window);
+
+	window.show();
+	return app.exec();
 }

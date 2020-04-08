@@ -37,6 +37,7 @@ public:
 	~EventRecognizer(void);
 	
 	// Interfacing methods
+	void load_profile(string file_path);
 	void load_profile(const char* file_path);
 	int run(void);
 private:

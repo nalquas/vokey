@@ -57,6 +57,9 @@ int EventRecognizer::run() {
 	return 0;
 }
 
+void EventRecognizer::load_profile(string file_path) {
+	load_profile(file_path.c_str());
+}
 void EventRecognizer::load_profile(const char* file_path) {
 	string temp = "";
 

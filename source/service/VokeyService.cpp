@@ -25,6 +25,6 @@ EventRecognizer er;
 
 int main(int argc, char const *argv[])
 {
-	er.load_profile("default_profile.json");
+	er.load_profile("./default_config/default_profile.json");
 	return er.run();
 }

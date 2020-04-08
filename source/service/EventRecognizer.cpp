@@ -47,7 +47,7 @@ int EventRecognizer::run() {
 		}
 
 		// This is a test quit event
-		if (strstr(_vr.get_text().c_str(), "quit")) {
+		if (strstr(_vr.get_text().c_str(), "quit") || strstr(_vr.get_text().c_str(), "exit")) {
 			cout << "\nQuitting...\n";
 			return 0;
 		}

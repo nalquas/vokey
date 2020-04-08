@@ -63,15 +63,16 @@ int VoiceRecognizer::process_microphone() {
 	
 	cout << "\nStarting recording\n";
 
-	uint8_t utt_started=FALSE, in_speech=FALSE;
-	while (!(!in_speech && utt_started)) {
+	_in_speech = FALSE;
+	_utt_started = FALSE;
+	while (!(!_in_speech && _utt_started)) {
 		size_t nsamp = 2048 / sizeof(int16);
 		pa_simple_read(_pulse, _buf, 2048, NULL);
 		ps_process_raw(_ps, _buf, nsamp, FALSE, FALSE);
 
-		in_speech = ps_get_in_speech(_ps);
-		if (in_speech && !utt_started) {
-			utt_started = TRUE;
+		_in_speech = ps_get_in_speech(_ps);
+		if (_in_speech && !_utt_started) {
+			_utt_started = TRUE;
 		}
 	}
 	pa_simple_flush(_pulse, NULL);

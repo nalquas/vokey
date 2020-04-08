@@ -45,6 +45,7 @@ private:
 	char const *_hyp = "";
 	int16 _buf[2048];
 	int _rv = 0;
+	uint8_t _utt_started=FALSE, _in_speech=FALSE;
 
 	// Pulseaudio:
 	pa_simple *_pulse = NULL;

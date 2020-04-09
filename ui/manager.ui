@@ -38,32 +38,20 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QTextBrowser" name="textBrowser"/>
+         <widget class="QTextBrowser" name="textBrowser_monitor">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vokey Event Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <widget class="QComboBox" name="comboBox_profile">
+           <widget class="QComboBox" name="comboBox_monitor_profile">
             <property name="toolTip">
-             <string>Selected profile</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selected active profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Preferred</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
           <item>
            <widget class="QCheckBox" name="checkBox_running">
@@ -72,6 +60,9 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should Vokey be running or paused?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Running</string>
@@ -88,12 +79,102 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
-         <widget class="QComboBox" name="comboBox"/>
+         <widget class="QComboBox" name="comboBox_config_profile">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selected profile for editing&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <item>
-           <widget class="QListWidget" name="listWidget"/>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <property name="sizeConstraint">
+             <enum>QLayout::SetDefaultConstraint</enum>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QListWidget" name="listWidget_event">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of events of this profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_add_event">
+                <property name="maximumSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add Event&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset theme="list-add">
+                  <normaloff>.</normaloff>.</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
+                <property name="default">
+                 <bool>false</bool>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_remove_event">
+                <property name="maximumSize">
+                 <size>
+                  <width>32</width>
+                  <height>32</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove Selected Event&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset theme="list-remove">
+                  <normaloff>.</normaloff>.</iconset>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
           </item>
           <item>
            <widget class="QScrollArea" name="scrollArea_2">
@@ -118,7 +199,11 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLineEdit" name="lineEdit_2"/>
+               <widget class="QLineEdit" name="lineEdit_event_title">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Title of this event&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
               </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_3">
@@ -128,22 +213,181 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLineEdit" name="lineEdit_3"/>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPlainTextEdit" name="plainTextEdit"/>
+               <widget class="QLineEdit" name="lineEdit_event_description">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Description of this event&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
               </item>
               <item row="2" column="0">
                <widget class="QLabel" name="label_4">
                 <property name="text">
-                 <string>Commands</string>
+                 <string>Commands
+(line-seperated)</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QPlainTextEdit" name="plainTextEdit_commands">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Voice commands that can trigger this event&lt;/p&gt;&lt;p&gt;(one command per line)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>Actions</string>
+                 <string>Action</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QSpinBox" name="spinBox_action">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit action number X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="suffix">
+                   <string/>
+                  </property>
+                  <property name="maximum">
+                   <number>0</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_add_action">
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add Action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="list-add">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>16</width>
+                    <height>16</height>
+                   </size>
+                  </property>
+                  <property name="default">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pushButton_remove_action">
+                  <property name="maximumSize">
+                   <size>
+                    <width>32</width>
+                    <height>32</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Remove Selected Action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="list-remove">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string>Action Type</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QComboBox" name="comboBox_action_type">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type of the selected action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="currentText">
+                 <string>execute</string>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>execute</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>print</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>bell</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>play_audio</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>speak</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>Parameter</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QLineEdit" name="lineEdit_action_parameter">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type-specific parameters of the selected action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                </widget>
               </item>
@@ -154,7 +398,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QDialogButtonBox" name="buttonBox_2">
+         <widget class="QDialogButtonBox" name="buttonBox_config">
           <property name="standardButtons">
            <set>QDialogButtonBox::Discard|QDialogButtonBox::Save</set>
           </property>
@@ -177,8 +421,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>764</width>
-             <height>467</height>
+             <width>155</width>
+             <height>44</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -190,14 +434,18 @@
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QLineEdit" name="lineEdit"/>
+             <widget class="QLineEdit" name="lineEdit_default_profile">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Profile that will be automatically loaded when the Vokey service starts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
          </widget>
         </item>
         <item>
-         <widget class="QDialogButtonBox" name="buttonBox">
+         <widget class="QDialogButtonBox" name="buttonBox_global">
           <property name="standardButtons">
            <set>QDialogButtonBox::Discard|QDialogButtonBox::RestoreDefaults|QDialogButtonBox::Save</set>
           </property>
@@ -222,7 +470,7 @@
     <property name="title">
      <string>Help</string>
     </property>
-    <addaction name="actionAbout_Vokey"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuFile">
     <property name="title">
@@ -233,9 +481,9 @@
    <addaction name="menuFile"/>
    <addaction name="menuabout"/>
   </widget>
-  <action name="actionAbout_Vokey">
+  <action name="actionAbout">
    <property name="text">
-    <string>About Vokey</string>
+    <string>About</string>
    </property>
   </action>
   <action name="actionQuit">

@@ -21,6 +21,7 @@
 
 // UI with layout
 #include "ui/manager.h"
+#include "ui/about.h"
 
 using namespace std;
 
@@ -30,11 +31,11 @@ int main(int argc, char **argv)
 
 	QApplication app(argc, argv);
 
-	QMainWindow window;
+	QMainWindow manager;
 
 	Ui_MainWindow ui;
-	ui.setupUi(&window);
+	ui.setupUi(&manager);
 
-	window.show();
+	manager.show();
 	return app.exec();
 }

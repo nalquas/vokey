@@ -19,59 +19,69 @@
 #include "EventRecognizer.h"
 
 // Constructor
-EventRecognizer::EventRecognizer() {
-	
+EventRecognizer::EventRecognizer(string profile_file_path) {
+	_listening = true;
+	_reload_requested = true;
+	_reload_profile_file_path = profile_file_path;
 }
 
 // Destructor
-EventRecognizer::~EventRecognizer() {
-	
-}
+EventRecognizer::~EventRecognizer() {}
 
 int EventRecognizer::run() {
 	for (;;) {
-		// Voice processing
-		if (_vr.process_microphone() != 0) return -1;
+		// Handle reload requests
+		if (_reload_requested) {
+			cout << "\nReloading profile...\n";
+			load_profile(_reload_profile_file_path);
+			_reload_requested = false;
+		}
 
-		// Text handling
-		cout << "Text: " << _vr.get_text() << "\nScore: " << _vr.get_score() << "\n";
+		// Handle listening
+		if (_listening) {
+			// Voice processing
+			if (_vr.process_microphone() != 0) return -1;
 
-		// Check for all possible events
-		bool any_event_activated = false;
-		for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
-			// Check for all possible commands
-			for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
-				if (strstr(_vr.get_text().c_str(), string(_profile["events"][i]["commands"][j]).c_str())) {
-					// Text matched one of the commands of this event
-					
-					// Activate all specified actions
-					for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
-						switch (get_action_type(string(_profile["events"][i]["actions"][k]["type"])))
-						{
-						case action_execute:
-							_action.execute(string(_profile["events"][i]["actions"][k]["command"]).c_str());
-							break;
-						case action_print:
-							_action.print(string(_profile["events"][i]["actions"][k]["text"]));
-							break;
-						case action_bell:
-							_action.bell();
-							break;
-						case action_play_audio:
-							_action.play_audio(string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
-							break;
-						case action_speak:
-							_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
-							break;
-						default:
-							cout << "Unhandled action type \"" << _profile["events"][i]["actions"][k]["type"] << "\"\n";
-							break;
+			// Text handling
+			cout << "Text: " << _vr.get_text() << "\n";
+
+			// Check for all possible events
+			bool any_event_activated = false;
+			for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
+				// Check for all possible commands
+				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
+					if (strstr(_vr.get_text().c_str(), string(_profile["events"][i]["commands"][j]).c_str())) {
+						// Text matched one of the commands of this event
+						
+						// Activate all specified actions
+						for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
+							switch (get_action_type(string(_profile["events"][i]["actions"][k]["type"])))
+							{
+							case action_execute:
+								_action.execute(string(_profile["events"][i]["actions"][k]["command"]).c_str());
+								break;
+							case action_print:
+								_action.print(string(_profile["events"][i]["actions"][k]["text"]));
+								break;
+							case action_bell:
+								_action.bell();
+								break;
+							case action_play_audio:
+								_action.play_audio(string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
+								break;
+							case action_speak:
+								_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
+								break;
+							default:
+								cout << "Unhandled action type \"" << _profile["events"][i]["actions"][k]["type"] << "\"\n";
+								break;
+							}
 						}
+						
+						// Don't check for any other accepted commands of this event
+						any_event_activated = true;
+						break;
 					}
-					
-					// Don't check for any other accepted commands of this event
-					any_event_activated = true;
-					break;
 				}
 			}
 		}
@@ -101,4 +111,23 @@ void EventRecognizer::load_profile(const char* file_path) {
 	f.close();
 
 	_profile = json::parse(temp);
+}
+
+void EventRecognizer::request_reload(string file_path) {
+	_reload_profile_file_path = file_path;
+	request_reload();
+}
+void EventRecognizer::request_reload() {
+	_reload_requested = true;
+}
+
+void EventRecognizer::set_listening(bool listen) {
+	if (listen)	 {
+		cout << "Starting";
+	}
+	else {
+		cout << "Stopping";
+	}
+	cout << " to listen...\n";
+	_listening = listen;
 }

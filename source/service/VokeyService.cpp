@@ -22,8 +22,9 @@
 #define VOKEY_TMP_LOG "/tmp/vokey/vokey.log"
 
 // Libraries
-#include <iostream>
+#include <csignal>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <stdlib.h>
 #include <string>
@@ -37,7 +38,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-EventRecognizer er;
+EventRecognizer *er;
 string config_location;
 struct stat st = {0};
 
@@ -159,19 +160,37 @@ bool already_running() {
 	return false;
 }
 
+void handle_signal(int signum) {
+	if (signum == SIGUSR1) {
+		// SIGUSR1 is used to tell the service to reload the profile
+		// TODO: store and get which profile to load
+		er->request_reload();
+	}
+	else if (signum == SIGUSR2) {
+		// SIGUSR2 is used to tell the service to change listening status
+		// TODO: store and get which status should be set
+		er->set_listening(true);
+	}
+}
+
 int main(int argc, char const *argv[]) {
+	// Make sure we are the only instance
 	if (already_running()) {
 		cout << "There already is an instance of vokey_service running. Exiting...\n";
 		return 0;
 	}
 
+	// Prepare for service
 	config_location = string(getenv("HOME")) + "/.config/vokey";
-	
 	ensure_config_exists();
+	er = new EventRecognizer(get_default_profile_path());
 
-	er.load_profile(get_default_profile_path());
+	// Activate interrupt handlers
+	signal(SIGUSR1, handle_signal);
+	signal(SIGUSR2, handle_signal);
 	
-	int result = er.run();
+	// Run the service
+	int result = er->run();
 	clean_tmp(); // TODO: What about when the application is killed, do we just leave the temporary files there?
 	return result;
 }

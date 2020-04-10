@@ -41,18 +41,24 @@ enum action_types {
 class EventRecognizer {
 public:
 	// Constructor, Destructor
-	EventRecognizer(void);
+	EventRecognizer(string profile_file_path);
 	~EventRecognizer(void);
 	
 	// Interfacing methods
-	void load_profile(string file_path);
-	void load_profile(const char* file_path);
+	void request_reload(void);
+	void request_reload(string file_path);
+	void set_listening(bool listen);
 	int run(void);
 private:
 	int get_action_type(string s);
+	void load_profile(string file_path);
+	void load_profile(const char* file_path);
+	bool _listening;
 	Action _action;
 	json _profile;
 	VoiceRecognizer _vr;
+	bool _reload_requested;
+	string _reload_profile_file_path;
 };
 
 #endif

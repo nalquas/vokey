@@ -77,7 +77,7 @@ int VoiceRecognizer::process_microphone() {
 	}
 	pa_simple_flush(_pulse, NULL);
 
-	cout << "Finished recording\nLatency: " << pa_simple_get_latency(_pulse, NULL) << "\n";
+	cout << "Finished recording\n";
 
 	_rv = ps_end_utt(_ps);
 	_hyp = ps_get_hyp(_ps, &_score);

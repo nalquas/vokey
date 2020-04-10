@@ -18,8 +18,9 @@
 #define VOKEY_CONFIG_VERSION 1
 
 #define VOKEY_TMP "/tmp/vokey"
-#define VOKEY_TMP_PID "/tmp/vokey/vokey.pid"
-#define VOKEY_TMP_LOG "/tmp/vokey/vokey.log"
+#define VOKEY_TMP_LOG "/tmp/vokey/service.log"
+#define VOKEY_TMP_PID "/tmp/vokey/service.pid"
+#define VOKEY_TMP_PROFILE "/tmp/vokey/profile.path"
 
 // Libraries
 #include <csignal>

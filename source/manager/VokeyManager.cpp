@@ -18,8 +18,10 @@
 #define VOKEY_CONFIG_VERSION 1
 
 #define VOKEY_TMP "/tmp/vokey"
-#define VOKEY_TMP_PID "/tmp/vokey/vokey.pid"
-#define VOKEY_TMP_LOG "/tmp/vokey/vokey.log"
+#define VOKEY_TMP_LISTENING "/tmp/vokey/listening.bool"
+#define VOKEY_TMP_LOG "/tmp/vokey/service.log"
+#define VOKEY_TMP_PID "/tmp/vokey/service.pid"
+#define VOKEY_TMP_PROFILE "/tmp/vokey/profile.path"
 
 // Libraries
 #include <csignal>
@@ -48,7 +50,10 @@ Ui_VokeyManager *ui_manager;
 QDialog *about;
 Ui_VokeyAbout *ui_about;
 
-// Function headers
+// Internal function headers
+void ensure_tmp_exists(void);
+
+// GUI-function headers
 void about_open(void);
 void about_close(void);
 pid_t get_service_pid(void);
@@ -85,6 +90,8 @@ int main(int argc, char **argv)
 	return app.exec();
 }
 
+// GUI-functions
+
 void about_open() {
 	about->show();
 }
@@ -93,8 +100,57 @@ void about_close() {
 	about->close();
 }
 
+void reload_profile() {
+	pid_t pid = get_service_pid();
+	if (pid >= 0) {
+		// Get data
+		string selected_profile = ui_manager->comboBox_monitor_profile->currentText().toStdString();
+		cout << "Sending signal to change profile to " << selected_profile << "\n";
+
+		// Store data
+		ensure_tmp_exists();
+		ofstream ofs;
+		ofs.open(VOKEY_TMP_PROFILE);
+		ofs << selected_profile;
+		ofs.close();
+
+		// Send signal for service to fetch data
+		kill(pid, SIGUSR1);
+	}
+	// TODO If the service does not exist, start it
+}
+
+void set_listening() {
+	pid_t pid = get_service_pid();
+	if (pid >= 0) {
+		// Get data
+		bool listening = ui_manager->checkBox_listening->isChecked();
+		cout << "Sending signal to change listening state to " << (int)listening << "\n";
+		
+		// Store data
+		ensure_tmp_exists();
+		ofstream ofs;
+		ofs.open(VOKEY_TMP_LISTENING);
+		ofs << listening;
+		ofs.close();
+
+		// Send signal for service to fetch data
+		kill(pid, SIGUSR2);
+	}
+	// TODO If the service does not exist, start it
+}
+
+// Internal functions
+
+void ensure_tmp_exists() {
+	// Make sure directory exists
+	if (stat(VOKEY_TMP, &st) == -1) {
+		mkdir(VOKEY_TMP, 0744);
+	}
+}
+
 pid_t get_service_pid() {
-	// Make sure directory and the PID-file exist
+	// Check if directory and the PID-file exist
 	if (stat(VOKEY_TMP, &st) != -1 && stat(VOKEY_TMP_PID, &st) != -1) {
 		string temp = "";
 		pid_t pid = 0;
@@ -117,24 +173,4 @@ pid_t get_service_pid() {
 
 	// Process does not exist
 	return -1;
-}
-
-void reload_profile() {
-	pid_t pid = get_service_pid();
-	if (pid >= 0) {
-		// TODO put the selected profile path in a file
-		cout << "Sending signal to change profile to TODO\n";
-		kill(pid, SIGUSR1);
-	}
-	// TODO If the service does not exist, start it
-}
-
-void set_listening() {
-	pid_t pid = get_service_pid();
-	if (pid >= 0) {
-		// TODO put the new listening state in a file
-		cout << "Sending signal to change listening state to TODO\n";
-		kill(pid, SIGUSR2);
-	}
-	// TODO If the service does not exist, start it
 }

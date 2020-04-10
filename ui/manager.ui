@@ -54,7 +54,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="checkBox_running">
+           <widget class="QCheckBox" name="checkBox_listening">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -65,7 +65,23 @@
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should Vokey be running or paused?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Running</string>
+             <string>Listening</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_restart">
+            <property name="text">
+             <string>Restart Service</string>
+            </property>
+            <property name="icon">
+             <iconset theme="refreshstructure"/>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -186,8 +202,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>241</width>
-               <height>291</height>
+               <width>376</width>
+               <height>427</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_3">
@@ -421,8 +437,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>155</width>
-             <height>44</height>
+             <width>764</width>
+             <height>467</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -482,11 +498,17 @@
    <addaction name="menuabout"/>
   </widget>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset theme="help-about"/>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>Quit</string>
    </property>

@@ -41,13 +41,15 @@ enum action_types {
 class EventRecognizer {
 public:
 	// Constructor, Destructor
-	EventRecognizer(string profile_file_path);
+	EventRecognizer(string profile_file_path, bool listening);
 	~EventRecognizer(void);
 	
 	// Interfacing methods
 	void request_reload(void);
 	void request_reload(string file_path);
 	void set_listening(bool listen);
+	bool get_listening(void);
+	string get_profile(void);
 	int run(void);
 private:
 	int get_action_type(string s);

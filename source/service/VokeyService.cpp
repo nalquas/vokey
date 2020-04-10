@@ -18,6 +18,7 @@
 #define VOKEY_CONFIG_VERSION 1
 
 #define VOKEY_TMP "/tmp/vokey"
+#define VOKEY_TMP_LISTENING "/tmp/vokey/listening.bool"
 #define VOKEY_TMP_LOG "/tmp/vokey/service.log"
 #define VOKEY_TMP_PID "/tmp/vokey/service.pid"
 #define VOKEY_TMP_PROFILE "/tmp/vokey/profile.path"
@@ -40,6 +41,7 @@ using namespace std;
 using json = nlohmann::json;
 
 EventRecognizer *er;
+json config;
 string config_location;
 struct stat st = {0};
 
@@ -65,7 +67,8 @@ void ensure_config_exists() {
 
 		json cfg = {
 			{"version", VOKEY_CONFIG_VERSION},
-			{"default_profile", "default_profile.json"}
+			{"default_profile", "default_profile.json"},
+			{"listening_on_startup", true}
 		};
 
 		ofstream of;
@@ -104,14 +107,25 @@ void ensure_config_exists() {
 	}
 }
 
-string get_default_profile_path() {
+void ensure_tmp_exists() {
+	// Make sure directory exists
+	if (stat(VOKEY_TMP, &st) == -1) {
+		mkdir(VOKEY_TMP, 0744);
+	}
+}
+
+void load_config() {
 	string temp = "";
 
 	ifstream f(config_location + "/config.json");
 	temp.assign( (istreambuf_iterator<char>(f) ), (istreambuf_iterator<char>()));
 	f.close();
 
-	return config_location + "/profiles/" + string(json::parse(temp)["default_profile"]);
+	config = json::parse(temp);
+}
+
+string get_default_profile_path() {
+	return config_location + "/profiles/" + string(config["default_profile"]);
 }
 
 void store_pid() {
@@ -121,9 +135,18 @@ void store_pid() {
 	of.close();
 }
 
-void clean_tmp() {
-	// Delete PID file
-	unlink(VOKEY_TMP_PID);
+void store_listening() {
+	ofstream of;
+	of.open(VOKEY_TMP_LISTENING);
+	of << er->get_listening();
+	of.close();
+}
+
+void store_current_profile() {
+	ofstream of;
+	of.open(VOKEY_TMP_PROFILE);
+	of << er->get_profile();
+	of.close();
 }
 
 bool already_running() {
@@ -169,8 +192,23 @@ void handle_signal(int signum) {
 	}
 	else if (signum == SIGUSR2) {
 		// SIGUSR2 is used to tell the service to change listening status
-		// TODO: store and get which status should be set
-		er->set_listening(true);
+		string temp = "";
+		bool listening = true;
+		ifstream ifs;
+		ifs.open(VOKEY_TMP_LISTENING);
+		ifs >> temp;
+		ifs.close();
+
+		try
+		{
+			listening = (stoi(temp) > 0);
+		}
+		catch(const exception& e)
+		{
+			cerr << e.what() << '\n';
+		}
+
+		er->set_listening(listening);
 	}
 }
 
@@ -184,14 +222,15 @@ int main(int argc, char const *argv[]) {
 	// Prepare for service
 	config_location = string(getenv("HOME")) + "/.config/vokey";
 	ensure_config_exists();
-	er = new EventRecognizer(get_default_profile_path());
+	load_config();
+	er = new EventRecognizer(get_default_profile_path(), config["listening_on_startup"]);
+	store_listening();
+	store_current_profile();
 
 	// Activate interrupt handlers
 	signal(SIGUSR1, handle_signal);
 	signal(SIGUSR2, handle_signal);
 	
 	// Run the service
-	int result = er->run();
-	clean_tmp(); // TODO: What about when the application is killed, do we just leave the temporary files there?
-	return result;
+	return er->run();
 }

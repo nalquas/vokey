@@ -47,6 +47,20 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
+           <widget class="QPushButton" name="pushButton_monitor_refresh">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manually refresh monitor GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Refresh</string>
+            </property>
+            <property name="icon">
+             <iconset theme="refreshstructure">
+              <normaloff>.</normaloff>.</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QComboBox" name="comboBox_monitor_profile">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Selected active profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -62,7 +76,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should Vokey be running or paused?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Should Vokey be reacting to your voice?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Listening</string>
@@ -71,6 +85,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_restart">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Restart or reload vokey_service&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Restart Service</string>
             </property>
@@ -203,8 +220,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>376</width>
-               <height>427</height>
+               <width>241</width>
+               <height>297</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_3">
@@ -438,8 +455,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>155</width>
-             <height>44</height>
+             <width>764</width>
+             <height>467</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -454,6 +471,13 @@
              <widget class="QLineEdit" name="lineEdit_default_profile">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Profile that will be automatically loaded when the Vokey service starts&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QCheckBox" name="checkBox_global_listening">
+              <property name="text">
+               <string>Listening on startup</string>
               </property>
              </widget>
             </item>

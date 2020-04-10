@@ -19,8 +19,8 @@
 #include "EventRecognizer.h"
 
 // Constructor
-EventRecognizer::EventRecognizer(string profile_file_path) {
-	_listening = true;
+EventRecognizer::EventRecognizer(string profile_file_path, bool listening) {
+	_listening = listening;
 	_reload_requested = true;
 	_reload_profile_file_path = profile_file_path;
 }
@@ -119,6 +119,7 @@ void EventRecognizer::request_reload(string file_path) {
 }
 void EventRecognizer::request_reload() {
 	_reload_requested = true;
+	_vr.request_finish();
 }
 
 void EventRecognizer::set_listening(bool listen) {
@@ -126,8 +127,17 @@ void EventRecognizer::set_listening(bool listen) {
 		cout << "Starting";
 	}
 	else {
+		_vr.request_finish();
 		cout << "Stopping";
 	}
 	cout << " to listen...\n";
 	_listening = listen;
+}
+
+bool EventRecognizer::get_listening(void) {
+	return _listening;
+}
+
+string EventRecognizer::get_profile(void) {
+	return _reload_profile_file_path;
 }

@@ -34,7 +34,9 @@ public:
 	int process_microphone(void);
 	string get_text(void);
 	int get_score(void);
+	void request_finish(void);
 private:
+	bool _finish_requested;
 	// Results:
 	string _text = "";
 	int _score = 0;

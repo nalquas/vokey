@@ -19,6 +19,7 @@
 
 // Constructor
 VoiceRecognizer::VoiceRecognizer() {
+	_finish_requested = false;
 	// Pulseaudio
 	_pulse_spec.format = PA_SAMPLE_S16LE;
 	_pulse_spec.channels = 1;
@@ -74,6 +75,12 @@ int VoiceRecognizer::process_microphone() {
 		if (_in_speech && !_utt_started) {
 			_utt_started = TRUE;
 		}
+
+		// This is commented out for now because it seems to cause segmentation faults
+		/*if (_finish_requested) {
+			_finish_requested = false;
+			break;
+		}*/
 	}
 	pa_simple_flush(_pulse, NULL);
 
@@ -92,4 +99,8 @@ string VoiceRecognizer::get_text() {
 
 int VoiceRecognizer::get_score() {
 	return _score;
+}
+
+void VoiceRecognizer::request_finish() {
+	_finish_requested = true;
 }

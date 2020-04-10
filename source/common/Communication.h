@@ -30,9 +30,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "common.h"
+#include "Common.h"
 
 using namespace std;
+
+// Header
+void ensure_tmp_exists(void);
+void clean_log(void);
+void print_log(string text);
+
+// Implementation
 
 void ensure_tmp_exists() {
 	// Make sure directory exists

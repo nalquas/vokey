@@ -13,10 +13,12 @@
 // Find the complete license in the LICENSE-file located in the project root.
 //
 // File description:
-// The main source file of vokey_service, responsible for handling startup procedures
+// Some common functionality of the files in this directory
 
 #ifndef Common_h
 #define Common_h
+
+#include <sys/stat.h>
 
 struct stat st = {0};
 

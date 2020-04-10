@@ -32,8 +32,8 @@
 #include <unistd.h>
 
 // Vokey includes
-#include "../common/config.h"
-#include "../common/communication.h"
+#include "../common/Config.h"
+#include "../common/Communication.h"
 #include "ui/manager.h"
 #include "ui/about.h"
 
@@ -52,7 +52,10 @@ void refresh_status(void);
 // GUI-function headers
 void about_open(void);
 void about_close(void);
+void discard_global_settings(void);
 void reload_profile(void);
+void reset_global_settings(void);
+void save_global_settings(void);
 void set_listening(void);
 void quit(void);
 
@@ -83,6 +86,9 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_restart, &QPushButton::clicked, reload_profile);
 	QObject::connect(ui_manager->checkBox_listening, &QCheckBox::stateChanged, set_listening);
 	QObject::connect(ui_manager->pushButton_monitor_refresh, &QPushButton::clicked, refresh_status);
+	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::Save), &QPushButton::clicked, save_global_settings);
+	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::Discard), &QPushButton::clicked, discard_global_settings);
+	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, reset_global_settings);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -119,6 +125,22 @@ void reload_profile() {
 		kill(pid, SIGUSR1);
 	}
 	// TODO If the service does not exist, start it
+}
+
+void reset_global_settings() {
+	reset_config_to_default();
+	discard_global_settings();
+}
+
+void save_global_settings() {
+	config["default_profile"] = ui_manager->lineEdit_default_profile->text().toStdString();
+	config["listening_on_startup"] = ui_manager->checkBox_global_listening->isChecked();
+	save_config();
+}
+
+void discard_global_settings() {
+	ui_manager->lineEdit_default_profile->setText(QString::fromStdString(config["default_profile"]));
+	ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
 }
 
 void set_listening() {

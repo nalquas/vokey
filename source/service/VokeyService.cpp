@@ -26,8 +26,8 @@
 #include <unistd.h>
 
 // Vokey includes
-#include "../common/config.h"
-#include "../common/communication.h"
+#include "../common/Config.h"
+#include "../common/Communication.h"
 #include "EventRecognizer.h"
 
 using namespace std;

@@ -29,13 +29,22 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "common.h"
+#include "Common.h"
 
 using namespace std;
 using json = nlohmann::json;
 
 json config;
 string config_location = string(getenv("HOME")) + "/.config/vokey";
+
+// Header
+void ensure_config_exists(void);
+string get_default_profile_path(void);
+void load_config(void);
+void reset_config_to_default(void);
+void save_config(void);
+
+// Implementation
 
 void ensure_config_exists() {
 	string config_path = config_location + "/config.json";
@@ -57,16 +66,9 @@ void ensure_config_exists() {
 		// No config exists, create default config...
 		cout << "First-time setup, creating default config at \"" << config_path << "\"...\n";
 
-		json cfg = {
-			{"version", VOKEY_CONFIG_VERSION},
-			{"default_profile", "default_profile.json"},
-			{"listening_on_startup", true}
-		};
+		reset_config_to_default();
 
-		ofstream of;
-		of.open(config_path);
-		of << cfg.dump(1, '\t');
-		of.close();
+		save_config();
 	}
 
 	// Ensure default profile exists
@@ -99,10 +101,8 @@ void ensure_config_exists() {
 	}
 }
 
-void save_config() {
-	ofstream ofs(config_location + "/config.json");
-	ofs << config.dump(1, '\t');
-	ofs.close();
+string get_default_profile_path() {
+	return config_location + "/profiles/" + string(config["default_profile"]);
 }
 
 void load_config() {
@@ -115,8 +115,20 @@ void load_config() {
 	config = json::parse(temp);
 }
 
-string get_default_profile_path() {
-	return config_location + "/profiles/" + string(config["default_profile"]);
+void reset_config_to_default() {
+	config = {
+		{"version", VOKEY_CONFIG_VERSION},
+		{"default_profile", "default_profile.json"},
+		{"listening_on_startup", true}
+	};
+}
+
+void save_config() {
+	config["version"] = VOKEY_CONFIG_VERSION;
+	
+	ofstream ofs(config_location + "/config.json");
+	ofs << config.dump(1, '\t');
+	ofs.close();
 }
 
 #endif

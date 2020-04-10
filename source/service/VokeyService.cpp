@@ -15,118 +15,24 @@
 // File description:
 // The main source file of vokey_service, responsible for handling startup procedures
 
-#define VOKEY_CONFIG_VERSION 1
-
-#define VOKEY_TMP "/tmp/vokey"
-#define VOKEY_TMP_LISTENING "/tmp/vokey/listening.bool"
-#define VOKEY_TMP_LOG "/tmp/vokey/service.log"
-#define VOKEY_TMP_PID "/tmp/vokey/service.pid"
-#define VOKEY_TMP_PROFILE "/tmp/vokey/profile.path"
-
-// Libraries
+// Includes
 #include <csignal>
 #include <fstream>
 #include <iostream>
-#include <nlohmann/json.hpp>
 #include <stdlib.h>
 #include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-// Classes
+// Vokey includes
+#include "../common/config.h"
+#include "../common/communication.h"
 #include "EventRecognizer.h"
 
 using namespace std;
-using json = nlohmann::json;
 
 EventRecognizer *er;
-json config;
-string config_location;
-struct stat st = {0};
-
-void ensure_config_exists() {
-	string config_path = config_location + "/config.json";
-	string profile_location = config_location + "/profiles";
-	string profile_path = profile_location + "/default_profile.json";
-
-	// Ensure vokey directory exists
-	if (stat(config_location.c_str(), &st) == -1) {
-		mkdir(config_location.c_str(), 0744);
-	}
-
-	// Ensure profile directory exists
-	if (stat(profile_location.c_str(), &st) == -1) {
-		mkdir(profile_location.c_str(), 0744);
-	}
-
-	// Ensure config exists
-	if (stat(config_path.c_str(), &st) == -1) {
-		// No config exists, create default config...
-		cout << "First-time setup, creating default config at \"" << config_path << "\"...\n";
-
-		json cfg = {
-			{"version", VOKEY_CONFIG_VERSION},
-			{"default_profile", "default_profile.json"},
-			{"listening_on_startup", true}
-		};
-
-		ofstream of;
-		of.open(config_path);
-		of << cfg.dump(1, '\t');
-		of.close();
-	}
-
-	// Ensure default profile exists
-	if (stat(profile_path.c_str(), &st) == -1) {
-		// No default profile exists, create default profile...
-		cout << "First-time setup, creating default profile at \"" << profile_path << "\"...\n";
-
-		json profile = {
-			{"name", "Default Profile"},
-			{"description", "This is the default profile"},
-			{"events", {
-				{
-					{"title", "Example Event"},
-					{"Description", "This is an example event."},
-					{"commands", {"example", "test"}},
-					{"actions", {
-						{
-							{"type", "tts"},
-							{"text", "You have triggered the example event. Congratulations, it is working!"}
-						}
-					}}
-				}
-			}}
-		};
-
-		ofstream of;
-		of.open(profile_path);
-		of << profile.dump(1, '\t');
-		of.close();
-	}
-}
-
-void ensure_tmp_exists() {
-	// Make sure directory exists
-	if (stat(VOKEY_TMP, &st) == -1) {
-		mkdir(VOKEY_TMP, 0744);
-	}
-}
-
-void load_config() {
-	string temp = "";
-
-	ifstream f(config_location + "/config.json");
-	temp.assign( (istreambuf_iterator<char>(f) ), (istreambuf_iterator<char>()));
-	f.close();
-
-	config = json::parse(temp);
-}
-
-string get_default_profile_path() {
-	return config_location + "/profiles/" + string(config["default_profile"]);
-}
 
 void store_pid() {
 	ofstream of;
@@ -149,26 +55,8 @@ void store_current_profile() {
 	of.close();
 }
 
-void clean_log() {
-	ofstream of;
-	of.open(VOKEY_TMP_LOG);
-	of << "";
-	of.close();
-}
-
-void print_log(string text) {
-	cout << text;
-	fstream f;
-	f.open(VOKEY_TMP_LOG, std::fstream::app);
-	f << text;
-	f.close();
-}
-
 bool already_running() {
-	// Make sure directory exists
-	if (stat(VOKEY_TMP, &st) == -1) {
-		mkdir(VOKEY_TMP, 0744);
-	}
+	ensure_tmp_exists();
 	
 	// Does file already exist?
 	if (stat(VOKEY_TMP_PID, &st) != -1) {
@@ -235,7 +123,6 @@ int main(int argc, char const *argv[]) {
 	}
 
 	// Prepare for service
-	config_location = string(getenv("HOME")) + "/.config/vokey";
 	ensure_config_exists();
 	load_config();
 	er = new EventRecognizer(get_default_profile_path(), config["listening_on_startup"]);

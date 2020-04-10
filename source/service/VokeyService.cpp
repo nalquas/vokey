@@ -149,6 +149,21 @@ void store_current_profile() {
 	of.close();
 }
 
+void clean_log() {
+	ofstream of;
+	of.open(VOKEY_TMP_LOG);
+	of << "";
+	of.close();
+}
+
+void print_log(string text) {
+	cout << text;
+	fstream f;
+	f.open(VOKEY_TMP_LOG, std::fstream::app);
+	f << text;
+	f.close();
+}
+
 bool already_running() {
 	// Make sure directory exists
 	if (stat(VOKEY_TMP, &st) == -1) {
@@ -226,6 +241,7 @@ int main(int argc, char const *argv[]) {
 	er = new EventRecognizer(get_default_profile_path(), config["listening_on_startup"]);
 	store_listening();
 	store_current_profile();
+	clean_log();
 
 	// Activate interrupt handlers
 	signal(SIGUSR1, handle_signal);

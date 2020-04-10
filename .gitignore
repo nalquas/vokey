@@ -1,6 +1,8 @@
 # Ignore compiled binaries
 **/*.o
 **/*.out
+vokey_service
+vokey_manager
 
 # Ignore compiled .ui files
 source/manager/ui/**.h

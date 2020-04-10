@@ -13,7 +13,7 @@
 // Find the complete license in the LICENSE-file located in the project root.
 //
 // File description:
-// The main source file of Vokey. This is where it all starts. Literally.
+// The main source file of vokey_service, responsible for handling startup procedures
 
 #define VOKEY_CONFIG_VERSION 1
 
@@ -161,7 +161,7 @@ bool already_running() {
 
 int main(int argc, char const *argv[]) {
 	if (already_running()) {
-		cout << "There already is an instance of vokey running. Exiting...\n";
+		cout << "There already is an instance of vokey_service running. Exiting...\n";
 		return 0;
 	}
 

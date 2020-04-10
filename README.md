@@ -39,11 +39,11 @@ Vokey is split into two sub-programs.
 The main program is a service reacting to your voice and acting according to a selected profile, executed using:
 
 ```
-./vokey_service.out
+./vokey_service
 ```
 
-The second program is a GUI-based manager used to configure the service:
+The second program is a GUI-based manager used to configure the service. You *could* use the service without this if you prefer editing .json files manually.
 
 ```
-./vokey_manager.out
+./vokey_manager
 ```

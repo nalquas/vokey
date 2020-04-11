@@ -34,8 +34,8 @@
 using namespace std;
 using json = nlohmann::json;
 
-json config;
-string config_location = string(getenv("HOME")) + "/.config/vokey";
+inline json config;
+inline string config_location = string(getenv("HOME")) + "/.config/vokey";
 
 // Header
 void ensure_config_exists(void);
@@ -46,7 +46,7 @@ void save_config(void);
 
 // Implementation
 
-void ensure_config_exists() {
+inline void ensure_config_exists() {
 	string config_path = config_location + "/config.json";
 	string profile_location = config_location + "/profiles";
 	string profile_path = profile_location + "/default_profile.json";
@@ -101,11 +101,11 @@ void ensure_config_exists() {
 	}
 }
 
-string get_default_profile_path() {
+inline string get_default_profile_path() {
 	return config_location + "/profiles/" + string(config["default_profile"]);
 }
 
-void load_config() {
+inline void load_config() {
 	string temp = "";
 
 	ifstream ifs(config_location + "/config.json");
@@ -115,7 +115,7 @@ void load_config() {
 	config = json::parse(temp);
 }
 
-void reset_config_to_default() {
+inline void reset_config_to_default() {
 	config = {
 		{"version", VOKEY_CONFIG_VERSION},
 		{"default_profile", "default_profile.json"},
@@ -123,7 +123,7 @@ void reset_config_to_default() {
 	};
 }
 
-void save_config() {
+inline void save_config() {
 	config["version"] = VOKEY_CONFIG_VERSION;
 	
 	ofstream ofs(config_location + "/config.json");

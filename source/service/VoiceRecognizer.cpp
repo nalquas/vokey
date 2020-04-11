@@ -93,7 +93,7 @@ int VoiceRecognizer::process_microphone() {
 	return 0;
 }
 
-string VoiceRecognizer::get_text() {
+std::string VoiceRecognizer::get_text() {
 	return _text;
 }
 

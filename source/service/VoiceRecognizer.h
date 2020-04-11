@@ -24,8 +24,6 @@
 
 #include "../common/Communication.h"
 
-using namespace std;
-
 class VoiceRecognizer {
 public:
 	// Constructor, Destructor
@@ -34,13 +32,13 @@ public:
 	
 	// Interfacing methods
 	int process_microphone(void);
-	string get_text(void);
+	std::string get_text(void);
 	int get_score(void);
 	void request_finish(void);
 private:
 	bool _finish_requested;
 	// Results:
-	string _text = "";
+	std::string _text = "";
 	int _score = 0;
 	
 	// Decoder variables:

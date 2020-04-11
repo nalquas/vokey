@@ -18,11 +18,7 @@
 #ifndef Candy_h
 #define Candy_h
 
-#include <iostream>
-
 #include "../common/Communication.h"
-
-using namespace std;
 
 inline void print_ascii_vokey() {
 	print_log(

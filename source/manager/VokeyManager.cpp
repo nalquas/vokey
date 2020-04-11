@@ -41,8 +41,6 @@
 #include "ui/manager.h"
 #include "ui/about.h"
 
-using namespace std;
-
 QApplication *application;
 QMainWindow *manager;
 Ui_VokeyManager *ui_manager;
@@ -74,7 +72,7 @@ int main(int argc, char **argv) {
 	ensure_tmp_exists();
 	load_config();
 
-	cout << "Launching VokeyManager...\n";
+	std::cout << "Launching VokeyManager...\n";
 
 	application = new QApplication(argc, argv);
 
@@ -133,10 +131,10 @@ void discard_global_settings() {
 // Read the log from disk and show it in the monitor tab
 void refresh_log() {
 	// Load log from file
-	string temp = "";
-	ifstream ifs;
+	std::string temp = "";
+	std::ifstream ifs;
 	ifs.open(VOKEY_TMP_LOG);
-	temp.assign( (istreambuf_iterator<char>(ifs) ), (istreambuf_iterator<char>()));
+	temp.assign( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()));
 	ifs.close();
 
 	// Remember scroll position to restore after new text has loaded in
@@ -176,8 +174,8 @@ void refresh_monitor() {
 		// If the tmp-file for listening exists, get the current listening status and show it in the listening checkbox
 		if (stat(VOKEY_TMP_LISTENING, &st) != -1) {
 			bool listening = true;
-			string temp = "";
-			ifstream ifs;
+			std::string temp = "";
+			std::ifstream ifs;
 			ifs.open(VOKEY_TMP_LISTENING);
 			ifs >> temp;
 			ifs.close();
@@ -186,9 +184,9 @@ void refresh_monitor() {
 			{
 				listening = (stoi(temp) > 0);
 			}
-			catch(const exception& e)
+			catch(const std::exception& e)
 			{
-				cerr << e.what() << '\n';
+				std::cerr << e.what() << '\n';
 			}
 
 			ui_manager->checkBox_listening->setChecked(listening);
@@ -225,12 +223,12 @@ void service_reload_profile() {
 	pid_t pid = get_service_pid();
 	if (pid >= 0) {
 		// Get data
-		string selected_profile = ui_manager->comboBox_monitor_profile->currentText().toStdString();
-		cout << "Sending signal to change profile to " << selected_profile << "\n";
+		std::string selected_profile = ui_manager->comboBox_monitor_profile->currentText().toStdString();
+		std::cout << "Sending signal to change profile to " << selected_profile << "\n";
 
 		// Store data
 		ensure_tmp_exists();
-		ofstream ofs;
+		std::ofstream ofs;
 		ofs.open(VOKEY_TMP_PROFILE);
 		ofs << selected_profile;
 		ofs.close();
@@ -247,11 +245,11 @@ void service_set_listening() {
 	if (pid >= 0) {
 		// Get data
 		bool listening = ui_manager->checkBox_listening->isChecked();
-		cout << "Sending signal to change listening state to " << (int)listening << "\n";
+		std::cout << "Sending signal to change listening state to " << (int)listening << "\n";
 		
 		// Store data
 		ensure_tmp_exists();
-		ofstream ofs;
+		std::ofstream ofs;
 		ofs.open(VOKEY_TMP_LISTENING);
 		ofs << listening;
 		ofs.close();

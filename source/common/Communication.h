@@ -33,25 +33,23 @@
 
 #include "Common.h"
 
-using namespace std;
-
 // Header
 
 pid_t get_service_pid(void);
 void ensure_tmp_exists(void);
 void ensure_log_exists(void);
 void clean_log(void);
-void print_log(string text);
+void print_log(std::string text);
 
 // Implementation
 
 inline pid_t get_service_pid() {
 	// Check if directory and the PID-file exist
 	if (stat(VOKEY_TMP, &st) != -1 && stat(VOKEY_TMP_PID, &st) != -1) {
-		string temp = "";
+		std::string temp = "";
 		pid_t pid = 0;
 		
-		ifstream ifs;
+		std::ifstream ifs;
 		ifs.open(VOKEY_TMP_PID);
 		ifs >> temp;
 		ifs.close();
@@ -61,9 +59,9 @@ inline pid_t get_service_pid() {
 			pid = stoi(temp);
 			if (0 == kill(pid, 0)) return pid;
 		}
-		catch(const exception& e) {
-			cerr << e.what() << '\n';
-			cout << "As the temporary PID file caused an error, we'll just assume there is no instance running...\n";
+		catch(const std::exception& e) {
+			std::cerr << e.what() << '\n';
+			std::cout << "As the temporary PID file caused an error, we'll just assume there is no instance running...\n";
 		}
 	}
 
@@ -88,15 +86,15 @@ inline void ensure_log_exists() {
 }
 
 inline void clean_log() {
-	ofstream of;
+	std::ofstream of;
 	of.open(VOKEY_TMP_LOG);
 	of << "";
 	of.close();
 }
 
-inline void print_log(string text) {
-	cout << text;
-	fstream f;
+inline void print_log(std::string text) {
+	std::cout << text;
+	std::fstream f;
 	f.open(VOKEY_TMP_LOG, std::fstream::app);
 	f << text;
 	f.close();

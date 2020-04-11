@@ -28,7 +28,6 @@
 #include "Action.h"
 #include "VoiceRecognizer.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 enum action_types {
@@ -42,26 +41,26 @@ enum action_types {
 class EventRecognizer {
 public:
 	// Constructor, Destructor
-	EventRecognizer(string profile_file_path, bool listening);
+	EventRecognizer(std::string profile_file_path, bool listening);
 	~EventRecognizer(void);
 	
 	// Interfacing methods
 	void request_reload(void);
-	void request_reload(string file_path);
+	void request_reload(std::string file_path);
 	void set_listening(bool listen);
 	bool get_listening(void);
-	string get_profile(void);
+	std::string get_profile(void);
 	int run(void);
 private:
-	int get_action_type(string s);
-	void load_profile(string file_path);
+	int get_action_type(std::string s);
+	void load_profile(std::string file_path);
 	void load_profile(const char* file_path);
 	bool _listening;
 	Action _action;
 	json _profile;
 	VoiceRecognizer _vr;
 	bool _reload_requested;
-	string _reload_profile_file_path;
+	std::string _reload_profile_file_path;
 };
 
 #endif

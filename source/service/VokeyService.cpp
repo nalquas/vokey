@@ -31,26 +31,24 @@
 #include "Candy.h"
 #include "EventRecognizer.h"
 
-using namespace std;
-
 EventRecognizer *er;
 
 void store_pid() {
-	ofstream of;
+	std::ofstream of;
 	of.open(VOKEY_TMP_PID);
 	of << getpid();
 	of.close();
 }
 
 void store_listening() {
-	ofstream of;
+	std::ofstream of;
 	of.open(VOKEY_TMP_LISTENING);
 	of << er->get_listening();
 	of.close();
 }
 
 void store_current_profile() {
-	ofstream of;
+	std::ofstream of;
 	of.open(VOKEY_TMP_PROFILE);
 	of << er->get_profile();
 	of.close();
@@ -75,9 +73,9 @@ void handle_signal(int signum) {
 	}
 	else if (signum == SIGUSR2) {
 		// SIGUSR2 is used to tell the service to change listening status
-		string temp = "";
+		std::string temp = "";
 		bool listening = true;
-		ifstream ifs;
+		std::ifstream ifs;
 		ifs.open(VOKEY_TMP_LISTENING);
 		ifs >> temp;
 		ifs.close();
@@ -86,9 +84,9 @@ void handle_signal(int signum) {
 		{
 			listening = (stoi(temp) > 0);
 		}
-		catch(const exception& e)
+		catch(const std::exception& e)
 		{
-			cerr << e.what() << '\n';
+			std::cerr << e.what() << '\n';
 		}
 
 		er->set_listening(listening);
@@ -98,7 +96,7 @@ void handle_signal(int signum) {
 int main(int argc, char const *argv[]) {
 	// Make sure we are the only instance
 	if (already_running()) {
-		cout << "There already is an instance of vokey_service running. Exiting...\n";
+		std::cout << "There already is an instance of vokey_service running. Exiting...\n";
 		return 0;
 	}
 

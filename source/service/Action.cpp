@@ -20,16 +20,16 @@
 Action::Action() {}
 
 void Action::execute(const char* command) {
-	print_log("[INFO] Executing: " + string(command) + "\n");
+	print_log("[INFO] Executing: " + std::string(command) + "\n");
 	system(command);
 }
 
-void Action::print(string text) {
+void Action::print(std::string text) {
 	print_log(text + "\n");
 }
 
 void Action::bell() {
-	cout << '\a';
+	std::cout << '\a';
 }
 
 void Action::play_audio(const char* file_path) {

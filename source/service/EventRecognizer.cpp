@@ -19,7 +19,7 @@
 #include "EventRecognizer.h"
 
 // Constructor
-EventRecognizer::EventRecognizer(string profile_file_path, bool listening) {
+EventRecognizer::EventRecognizer(std::string profile_file_path, bool listening) {
 	_listening = listening;
 	_reload_requested = true;
 	_reload_profile_file_path = profile_file_path;
@@ -50,31 +50,31 @@ int EventRecognizer::run() {
 			for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
 				// Check for all possible commands
 				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
-					if (strstr(_vr.get_text().c_str(), string(_profile["events"][i]["commands"][j]).c_str())) {
+					if (strstr(_vr.get_text().c_str(), std::string(_profile["events"][i]["commands"][j]).c_str())) {
 						// Text matched one of the commands of this event
-						print_log("[EVENT] Triggered " + string(_profile["events"][i]["title"]) + "\n");
+						print_log("[EVENT] Triggered " + std::string(_profile["events"][i]["title"]) + "\n");
 						
 						// Activate all specified actions
 						for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
-							switch (get_action_type(string(_profile["events"][i]["actions"][k]["type"])))
+							switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
 							{
 							case action_execute:
-								_action.execute(string(_profile["events"][i]["actions"][k]["command"]).c_str());
+								_action.execute(std::string(_profile["events"][i]["actions"][k]["command"]).c_str());
 								break;
 							case action_print:
-								_action.print(string(_profile["events"][i]["actions"][k]["text"]));
+								_action.print(std::string(_profile["events"][i]["actions"][k]["text"]));
 								break;
 							case action_bell:
 								_action.bell();
 								break;
 							case action_play_audio:
-								_action.play_audio(string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
+								_action.play_audio(std::string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
 								break;
 							case action_speak:
-								_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
+								_action.speak(std::string(_profile["events"][i]["actions"][k]["text"]).c_str());
 								break;
 							default:
-								print_log("[WARNING] Unhandled action type \"" + string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
+								print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
 								break;
 							}
 						}
@@ -92,7 +92,7 @@ int EventRecognizer::run() {
 	return 0;
 }
 
-int EventRecognizer::get_action_type(string s) {
+int EventRecognizer::get_action_type(std::string s) {
 	if (s == "execute") return action_execute;
 	if (s == "print") return action_print;
 	if (s == "bell") return action_bell;
@@ -101,20 +101,20 @@ int EventRecognizer::get_action_type(string s) {
 	return -1;
 }
 
-void EventRecognizer::load_profile(string file_path) {
+void EventRecognizer::load_profile(std::string file_path) {
 	load_profile(file_path.c_str());
 }
 void EventRecognizer::load_profile(const char* file_path) {
-	string temp = "";
+	std::string temp = "";
 
-	ifstream f(file_path);
-	temp.assign( (istreambuf_iterator<char>(f) ), (istreambuf_iterator<char>()));
+	std::ifstream f(file_path);
+	temp.assign( (std::istreambuf_iterator<char>(f) ), (std::istreambuf_iterator<char>()));
 	f.close();
 
 	_profile = json::parse(temp);
 }
 
-void EventRecognizer::request_reload(string file_path) {
+void EventRecognizer::request_reload(std::string file_path) {
 	_reload_profile_file_path = file_path;
 	request_reload();
 }
@@ -124,7 +124,7 @@ void EventRecognizer::request_reload() {
 }
 
 void EventRecognizer::set_listening(bool listen) {
-	string temp = "[INFO] ";
+	std::string temp = "[INFO] ";
 	if (listen)	 {
 		temp += "Starting";
 	}
@@ -141,6 +141,6 @@ bool EventRecognizer::get_listening(void) {
 	return _listening;
 }
 
-string EventRecognizer::get_profile(void) {
+std::string EventRecognizer::get_profile(void) {
 	return _reload_profile_file_path;
 }

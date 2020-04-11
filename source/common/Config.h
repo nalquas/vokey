@@ -31,15 +31,14 @@
 
 #include "Common.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 inline json config;
-inline string config_location = string(getenv("HOME")) + "/.config/vokey";
+inline std::string config_location = std::string(getenv("HOME")) + "/.config/vokey";
 
 // Header
 void ensure_config_exists(void);
-string get_default_profile_path(void);
+std::string get_default_profile_path(void);
 void load_config(void);
 void reset_config_to_default(void);
 void save_config(void);
@@ -47,9 +46,9 @@ void save_config(void);
 // Implementation
 
 inline void ensure_config_exists() {
-	string config_path = config_location + "/config.json";
-	string profile_location = config_location + "/profiles";
-	string profile_path = profile_location + "/default_profile.json";
+	std::string config_path = config_location + "/config.json";
+	std::string profile_location = config_location + "/profiles";
+	std::string profile_path = profile_location + "/default_profile.json";
 
 	// Ensure vokey directory exists
 	if (stat(config_location.c_str(), &st) == -1) {
@@ -64,7 +63,7 @@ inline void ensure_config_exists() {
 	// Ensure config exists
 	if (stat(config_path.c_str(), &st) == -1) {
 		// No config exists, create default config...
-		cout << "First-time setup, creating default config at \"" << config_path << "\"...\n";
+		std::cout << "First-time setup, creating default config at \"" << config_path << "\"...\n";
 
 		reset_config_to_default();
 
@@ -74,7 +73,7 @@ inline void ensure_config_exists() {
 	// Ensure default profile exists
 	if (stat(profile_path.c_str(), &st) == -1) {
 		// No default profile exists, create default profile...
-		cout << "First-time setup, creating default profile at \"" << profile_path << "\"...\n";
+		std::cout << "First-time setup, creating default profile at \"" << profile_path << "\"...\n";
 
 		json profile = {
 			{"name", "Default Profile"},
@@ -94,22 +93,22 @@ inline void ensure_config_exists() {
 			}}
 		};
 
-		ofstream of;
+		std::ofstream of;
 		of.open(profile_path);
 		of << profile.dump(1, '\t');
 		of.close();
 	}
 }
 
-inline string get_default_profile_path() {
-	return config_location + "/profiles/" + string(config["default_profile"]);
+inline std::string get_default_profile_path() {
+	return config_location + "/profiles/" + std::string(config["default_profile"]);
 }
 
 inline void load_config() {
-	string temp = "";
+	std::string temp = "";
 
-	ifstream ifs(config_location + "/config.json");
-	temp.assign( (istreambuf_iterator<char>(ifs) ), (istreambuf_iterator<char>()));
+	std::ifstream ifs(config_location + "/config.json");
+	temp.assign( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()));
 	ifs.close();
 
 	config = json::parse(temp);
@@ -126,7 +125,7 @@ inline void reset_config_to_default() {
 inline void save_config() {
 	config["version"] = VOKEY_CONFIG_VERSION;
 	
-	ofstream ofs(config_location + "/config.json");
+	std::ofstream ofs(config_location + "/config.json");
 	ofs << config.dump(1, '\t');
 	ofs.close();
 }

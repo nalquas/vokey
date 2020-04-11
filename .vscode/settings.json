@@ -62,6 +62,7 @@
 		"typeinfo": "cpp",
 		"valarray": "cpp",
 		"variant": "cpp",
-		"csignal": "cpp"
+		"csignal": "cpp",
+		"qtimer": "cpp"
 	}
 }

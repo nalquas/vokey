@@ -58,29 +58,8 @@ void store_current_profile() {
 bool already_running() {
 	ensure_tmp_exists();
 	
-	// Does file already exist?
-	if (stat(VOKEY_TMP_PID, &st) != -1) {
-		string temp = "";
-		pid_t pid = 0;
-		
-		ifstream ifs;
-		ifs.open(VOKEY_TMP_PID);
-		ifs >> temp;
-		ifs.close();
-
-		// Is the PID given in the file still running?
-		try
-		{
-			pid = stoi(temp);
-			if (0 == kill(pid, 0)) return true;
-		}
-		catch(const exception& e)
-		{
-			cerr << e.what() << '\n';
-			cout << "As the temporary PID file caused an error, we'll just assume there is no other instance running...\n";
-		}
-		
-	}
+	// Check if there already is an instance of vokey_service running
+	if (get_service_pid() >= 0) return true;
 
 	// Since there is no other instance running, store our PID
 	store_pid();

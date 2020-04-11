@@ -24,6 +24,7 @@
 #define VOKEY_TMP_PID "/tmp/vokey/service.pid"
 #define VOKEY_TMP_PROFILE "/tmp/vokey/profile.path"
 
+#include <csignal>
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h>
@@ -36,12 +37,39 @@ using namespace std;
 
 // Header
 
+pid_t get_service_pid(void);
 void ensure_tmp_exists(void);
 void ensure_log_exists(void);
 void clean_log(void);
 void print_log(string text);
 
 // Implementation
+
+inline pid_t get_service_pid() {
+	// Check if directory and the PID-file exist
+	if (stat(VOKEY_TMP, &st) != -1 && stat(VOKEY_TMP_PID, &st) != -1) {
+		string temp = "";
+		pid_t pid = 0;
+		
+		ifstream ifs;
+		ifs.open(VOKEY_TMP_PID);
+		ifs >> temp;
+		ifs.close();
+
+		// Is the PID given in the file still running?
+		try {
+			pid = stoi(temp);
+			if (0 == kill(pid, 0)) return pid;
+		}
+		catch(const exception& e) {
+			cerr << e.what() << '\n';
+			cout << "As the temporary PID file caused an error, we'll just assume there is no instance running...\n";
+		}
+	}
+
+	// Process does not exist
+	return -1;
+}
 
 inline void ensure_tmp_exists() {
 	// Make sure directory exists
@@ -52,7 +80,9 @@ inline void ensure_tmp_exists() {
 
 inline void ensure_log_exists() {
 	ensure_tmp_exists();
-	if (stat(VOKEY_TMP_LOG, &st) == -1) {
+
+	// If there is no log or there is no instance of the service running, write a clean log into the file
+	if (stat(VOKEY_TMP_LOG, &st) == -1 || get_service_pid() == -1) {
 		clean_log();
 	}
 }

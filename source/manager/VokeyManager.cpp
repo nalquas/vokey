@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QPushButton>
 #include <QString>
+#include <QTimer>
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -45,14 +46,17 @@ Ui_VokeyManager *ui_manager;
 QDialog *about;
 Ui_VokeyAbout *ui_about;
 
+// Timers
+QTimer *timer_log;
+
 // Internal function headers
-pid_t get_service_pid(void);
 void refresh_status(void);
 
 // GUI-function headers
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
+void refresh_log(void);
 void reload_profile(void);
 void reset_global_settings(void);
 void save_global_settings(void);
@@ -93,6 +97,13 @@ int main(int argc, char **argv) {
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
 
+	// Start a timer for log refreshing
+	timer_log = new QTimer();
+	QObject::connect(timer_log, &QTimer::timeout, refresh_log);
+	ensure_log_exists();
+	refresh_log();
+
+	// Show application to user
 	manager->show();
 	return application->exec();
 }
@@ -105,6 +116,21 @@ void about_open() {
 
 void about_close() {
 	about->close();
+}
+
+void refresh_log() {
+	// Load log from file
+	string temp = "";
+	ifstream ifs;
+	ifs.open(VOKEY_TMP_LOG);
+	temp.assign( (istreambuf_iterator<char>(ifs) ), (istreambuf_iterator<char>()));
+	ifs.close();
+
+	// Show log in GUI
+	ui_manager->textBrowser_monitor->setText(QString::fromStdString(temp));
+
+	// Restart timer
+	timer_log->start(1500);
 }
 
 void reload_profile() {
@@ -168,32 +194,6 @@ void quit() {
 }
 
 // Internal functions
-
-pid_t get_service_pid() {
-	// Check if directory and the PID-file exist
-	if (stat(VOKEY_TMP, &st) != -1 && stat(VOKEY_TMP_PID, &st) != -1) {
-		string temp = "";
-		pid_t pid = 0;
-		
-		ifstream ifs;
-		ifs.open(VOKEY_TMP_PID);
-		ifs >> temp;
-		ifs.close();
-
-		// Is the PID given in the file still running?
-		try {
-			pid = stoi(temp);
-			if (0 == kill(pid, 0)) return pid;
-		}
-		catch(const exception& e) {
-			cerr << e.what() << '\n';
-			cout << "As the temporary PID file caused an error, we'll just assume there is no instance running...\n";
-		}
-	}
-
-	// Process does not exist
-	return -1;
-}
 
 void refresh_status() {
 	ensure_tmp_exists();

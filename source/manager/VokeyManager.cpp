@@ -26,6 +26,7 @@
 #include <QDialogButtonBox>
 #include <QObject>
 #include <QPushButton>
+#include <QScrollBar>
 #include <QString>
 #include <QTimer>
 #include <string>
@@ -56,7 +57,7 @@ void refresh_status(void);
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
-void refresh_log(void);
+void refresh_monitor(void);
 void reload_profile(void);
 void reset_global_settings(void);
 void save_global_settings(void);
@@ -99,9 +100,9 @@ int main(int argc, char **argv) {
 
 	// Start a timer for log refreshing
 	timer_log = new QTimer();
-	QObject::connect(timer_log, &QTimer::timeout, refresh_log);
+	QObject::connect(timer_log, &QTimer::timeout, refresh_monitor);
 	ensure_log_exists();
-	refresh_log();
+	refresh_monitor();
 
 	// Show application to user
 	manager->show();
@@ -118,7 +119,7 @@ void about_close() {
 	about->close();
 }
 
-void refresh_log() {
+void refresh_monitor() {
 	// Load log from file
 	string temp = "";
 	ifstream ifs;
@@ -126,8 +127,26 @@ void refresh_log() {
 	temp.assign( (istreambuf_iterator<char>(ifs) ), (istreambuf_iterator<char>()));
 	ifs.close();
 
+	// Remember scroll position to restore after new text has loaded in
+	QScrollBar *sb = ui_manager->textBrowser_monitor->verticalScrollBar();
+	int scroll_position = sb->value();
+
 	// Show log in GUI
 	ui_manager->textBrowser_monitor->setText(QString::fromStdString(temp));
+
+	// If the autoscroll-checkbox is checked, scroll to the bottom; Otherwise, restore previous scroll position
+	if (ui_manager->checkBox_monitor_autoscroll->isChecked()) {
+		sb->setValue(sb->maximum());
+	}
+	else {
+		// Check whether the previous scroll position is still within scroll range; Otherwise, scroll to bottom
+		if (scroll_position < sb->maximum()) {
+			sb->setValue(scroll_position);
+		}
+		else {
+			sb->setValue(sb->maximum());
+		}
+	}
 
 	// Restart timer
 	timer_log->start(1500);

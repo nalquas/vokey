@@ -13,26 +13,27 @@
 // Find the complete license in the LICENSE-file located in the project root.
 //
 // File description:
-// Action.h handles the execution of actions.
+// Candy.h only contains visual treats, like the ASCII-logo above.
 
-#ifndef Action_h
-#define Action_h
+#ifndef Candy_h
+#define Candy_h
+
+#include <iostream>
 
 #include "../common/Communication.h"
-#include <cstdlib>
-#include <cstring>
-#include <iostream>
 
 using namespace std;
 
-class Action {
-public:
-	Action(void);
-	void execute(const char* command);
-	void print(string text);
-	void bell(void);
-	void play_audio(const char* file_path);
-	void speak(const char* text);
-};
+inline void print_ascii_vokey() {
+	print_log(
+	".          .  __________   __    _____  ___________  __      __\n"
+	"|\\        /| /   ____   \\ |  |  /  __/ /   _______/ |  |    |  |\n"
+	"| \\      / | |  /    \\  | |  \\_/  /    |  |______   |  |    |  |\n"
+	"\\  \\    /  / | /      \\ | |      /     |   ______|  \\  \\____/  |\n"
+	" \\  \\  /  /  | \\      / | |   _  \\     |  |          \\______   |\n"
+	"  \\  \\/  /   |  \\____/  | |  / \\  \\__  |  |_______    ______\\  |\n"
+	"   \\____/    \\__________/ |__|  \\____\\ \\__________\\  /_________/\n"
+	);
+}
 
 #endif

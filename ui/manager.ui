@@ -39,6 +39,11 @@
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QTextBrowser" name="textBrowser_monitor">
+          <property name="font">
+           <font>
+            <family>Monospace</family>
+           </font>
+          </property>
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vokey Event Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
@@ -253,8 +258,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>376</width>
-               <height>427</height>
+               <width>241</width>
+               <height>297</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_3">
@@ -488,8 +493,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>764</width>
-             <height>467</height>
+             <width>257</width>
+             <height>72</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">

@@ -32,7 +32,7 @@ int EventRecognizer::run() {
 	for (;;) {
 		// Handle reload requests
 		if (_reload_requested) {
-			print_log("\nReloading profile...\n");
+			print_log("\n[INFO] Reloading profile...\n");
 			load_profile(_reload_profile_file_path);
 			_reload_requested = false;
 		}
@@ -43,7 +43,7 @@ int EventRecognizer::run() {
 			if (_vr.process_microphone() != 0) return -1;
 
 			// Text handling
-			print_log("Text: " + _vr.get_text() + "\n");
+			print_log("[INFO] Text: " + _vr.get_text() + "\n");
 
 			// Check for all possible events
 			bool any_event_activated = false;
@@ -52,6 +52,7 @@ int EventRecognizer::run() {
 				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
 					if (strstr(_vr.get_text().c_str(), string(_profile["events"][i]["commands"][j]).c_str())) {
 						// Text matched one of the commands of this event
+						print_log("[EVENT] Triggered " + string(_profile["events"][i]["title"]) + "\n");
 						
 						// Activate all specified actions
 						for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
@@ -73,7 +74,7 @@ int EventRecognizer::run() {
 								_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
 								break;
 							default:
-								print_log("Unhandled action type \"" + string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
+								print_log("[WARNING] Unhandled action type \"" + string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
 								break;
 							}
 						}
@@ -123,7 +124,7 @@ void EventRecognizer::request_reload() {
 }
 
 void EventRecognizer::set_listening(bool listen) {
-	string temp = "";
+	string temp = "[INFO] ";
 	if (listen)	 {
 		temp += "Starting";
 	}

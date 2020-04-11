@@ -12,7 +12,7 @@ POCKETSPHINX_MODELDIR = `pkg-config --variable=modeldir pocketsphinx`
 
 all: vokey_service vokey_manager
 
-vokey_service: source/service/VokeyService.cpp source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp source/common/Common.h source/common/Communication.h source/common/Config.h
+vokey_service: source/service/VokeyService.cpp source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp source/service/Candy.h source/common/Common.h source/common/Communication.h source/common/Config.h
 	$(COMPILER) $(C_STD) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" source/service/VokeyService.cpp  source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service
 	chmod +x vokey_service
 

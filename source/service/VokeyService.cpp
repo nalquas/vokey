@@ -28,6 +28,7 @@
 // Vokey includes
 #include "../common/Config.h"
 #include "../common/Communication.h"
+#include "Candy.h"
 #include "EventRecognizer.h"
 
 using namespace std;
@@ -114,5 +115,6 @@ int main(int argc, char const *argv[]) {
 	signal(SIGUSR2, handle_signal);
 	
 	// Run the service
+	print_ascii_vokey();
 	return er->run();
 }

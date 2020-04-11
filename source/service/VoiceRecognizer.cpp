@@ -62,7 +62,7 @@ VoiceRecognizer::~VoiceRecognizer() {
 int VoiceRecognizer::process_microphone() {
 	_rv = ps_start_utt(_ps);
 	
-	print_log("\nStarting recording\n");
+	print_log("\n[INFO] Starting recording\n");
 
 	_in_speech = FALSE;
 	_utt_started = FALSE;
@@ -84,7 +84,7 @@ int VoiceRecognizer::process_microphone() {
 	}
 	pa_simple_flush(_pulse, NULL);
 
-	print_log("Finished recording\n");
+	print_log("[INFO] Finished recording\n");
 
 	_rv = ps_end_utt(_ps);
 	_hyp = ps_get_hyp(_ps, &_score);

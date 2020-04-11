@@ -20,12 +20,12 @@
 Action::Action() {}
 
 void Action::execute(const char* command) {
-	cout << "\nExecuting: " << command << "\n";
+	print_log("[INFO] Executing: " + string(command) + "\n");
 	system(command);
 }
 
 void Action::print(string text) {
-	cout << "\n" << text << "\n";
+	print_log(text + "\n");
 }
 
 void Action::bell() {

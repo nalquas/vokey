@@ -16,6 +16,7 @@
 // The main source file of Vokey's management application.
 
 // Includes
+
 #include <csignal>
 #include <fstream>
 #include <iostream>
@@ -34,6 +35,7 @@
 #include <unistd.h>
 
 // Vokey includes
+
 #include "../common/Config.h"
 #include "../common/Communication.h"
 #include "ui/manager.h"
@@ -48,6 +50,7 @@ QDialog *about;
 Ui_VokeyAbout *ui_about;
 
 // Timers
+
 QTimer *timer_monitor;
 
 // Function headers
@@ -101,7 +104,7 @@ int main(int argc, char **argv) {
 	// Global settings tab: Load current settings from config
 	discard_global_settings();
 
-	// Start monitor-tab refresh timer
+	// Start monitor tab refresh timer
 	timer_monitor = new QTimer();
 	QObject::connect(timer_monitor, &QTimer::timeout, refresh_monitor);
 	refresh_monitor();
@@ -111,21 +114,23 @@ int main(int argc, char **argv) {
 	return application->exec();
 }
 
-// GUI-functions
-
+// Open the about dialog
 void about_open() {
 	about->show();
 }
 
+// Close the about dialog
 void about_close() {
 	about->close();
 }
 
+// Reset what's shown in the global settings GUI to what is currently saved in the config
 void discard_global_settings() {
 	ui_manager->lineEdit_default_profile->setText(QString::fromStdString(config["default_profile"]));
 	ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
 }
 
+// Read the log from disk and show it in the monitor tab
 void refresh_log() {
 	// Load log from file
 	string temp = "";
@@ -156,6 +161,7 @@ void refresh_log() {
 	}
 }
 
+// Refresh all things shown in the monitor tab
 void refresh_monitor() {
 	// Stop the timer (just in case this was triggered by the manual refresh button)
 	timer_monitor->stop();
@@ -200,17 +206,21 @@ void refresh_monitor() {
 	timer_monitor->start(1500);
 }
 
+// Reset the internal config to default and show those defaults in the GUI.
+// (does not write to disk)
 void reset_global_settings() {
 	reset_config_to_default();
 	discard_global_settings();
 }
 
+// Take the settings from the global settings GUI, put them into the config, write changes to disk
 void save_global_settings() {
 	config["default_profile"] = ui_manager->lineEdit_default_profile->text().toStdString();
 	config["listening_on_startup"] = ui_manager->checkBox_global_listening->isChecked();
 	save_config();
 }
 
+// Tell the service to reload into the profile selected in the monitor tab
 void service_reload_profile() {
 	pid_t pid = get_service_pid();
 	if (pid >= 0) {
@@ -231,6 +241,7 @@ void service_reload_profile() {
 	// TODO If the service does not exist, start it
 }
 
+// Tell the service to change its listening state to what the listening checkbox says
 void service_set_listening() {
 	pid_t pid = get_service_pid();
 	if (pid >= 0) {
@@ -251,6 +262,7 @@ void service_set_listening() {
 	// TODO If the service does not exist, start it
 }
 
+// Close all windows, thus stopping vokey_manager
 void quit() {
 	application->closeAllWindows();
 }

@@ -42,7 +42,6 @@ class EventRecognizer {
 public:
 	// Constructor, Destructor
 	EventRecognizer(std::string profile_file_path, bool listening);
-	~EventRecognizer(void);
 	
 	// Interfacing methods
 	void request_reload(void);

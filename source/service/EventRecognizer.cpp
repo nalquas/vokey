@@ -25,9 +25,6 @@ EventRecognizer::EventRecognizer(std::string profile_file_path, bool listening) 
 	_reload_profile_file_path = profile_file_path;
 }
 
-// Destructor
-EventRecognizer::~EventRecognizer() {}
-
 int EventRecognizer::run() {
 	for (;;) {
 		// Handle reload requests

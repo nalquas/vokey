@@ -22,6 +22,8 @@
 #include <pocketsphinx.h>
 #include <pulse/simple.h>
 
+#include "../common/Communication.h"
+
 using namespace std;
 
 class VoiceRecognizer {

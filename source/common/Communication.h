@@ -35,27 +35,36 @@
 using namespace std;
 
 // Header
+
 void ensure_tmp_exists(void);
+void ensure_log_exists(void);
 void clean_log(void);
 void print_log(string text);
 
 // Implementation
 
-void ensure_tmp_exists() {
+inline void ensure_tmp_exists() {
 	// Make sure directory exists
 	if (stat(VOKEY_TMP, &st) == -1) {
 		mkdir(VOKEY_TMP, 0744);
 	}
 }
 
-void clean_log() {
+inline void ensure_log_exists() {
+	ensure_tmp_exists();
+	if (stat(VOKEY_TMP_LOG, &st) == -1) {
+		clean_log();
+	}
+}
+
+inline void clean_log() {
 	ofstream of;
 	of.open(VOKEY_TMP_LOG);
 	of << "";
 	of.close();
 }
 
-void print_log(string text) {
+inline void print_log(string text) {
 	cout << text;
 	fstream f;
 	f.open(VOKEY_TMP_LOG, std::fstream::app);

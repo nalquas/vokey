@@ -32,7 +32,7 @@ int EventRecognizer::run() {
 	for (;;) {
 		// Handle reload requests
 		if (_reload_requested) {
-			cout << "\nReloading profile...\n";
+			print_log("\nReloading profile...\n");
 			load_profile(_reload_profile_file_path);
 			_reload_requested = false;
 		}
@@ -43,7 +43,7 @@ int EventRecognizer::run() {
 			if (_vr.process_microphone() != 0) return -1;
 
 			// Text handling
-			cout << "Text: " << _vr.get_text() << "\n";
+			print_log("Text: " + _vr.get_text() + "\n");
 
 			// Check for all possible events
 			bool any_event_activated = false;
@@ -73,7 +73,7 @@ int EventRecognizer::run() {
 								_action.speak(string(_profile["events"][i]["actions"][k]["text"]).c_str());
 								break;
 							default:
-								cout << "Unhandled action type \"" << _profile["events"][i]["actions"][k]["type"] << "\"\n";
+								print_log("Unhandled action type \"" + string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
 								break;
 							}
 						}
@@ -123,14 +123,16 @@ void EventRecognizer::request_reload() {
 }
 
 void EventRecognizer::set_listening(bool listen) {
+	string temp = "";
 	if (listen)	 {
-		cout << "Starting";
+		temp += "Starting";
 	}
 	else {
 		_vr.request_finish();
-		cout << "Stopping";
+		temp += "Stopping";
 	}
-	cout << " to listen...\n";
+	temp += " to listen...\n";
+	print_log(temp);
 	_listening = listen;
 }
 

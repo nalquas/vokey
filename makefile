@@ -5,6 +5,7 @@
 .PHONY: all clean
 
 COMPILER = g++
+C_STD = -std=c++17
 LINKERFLAGS_SERVICE = `pkg-config --cflags --libs pocketsphinx sphinxbase`
 LINKERFLAGS_MANAGER = `pkg-config --cflags --libs Qt5Widgets`
 POCKETSPHINX_MODELDIR = `pkg-config --variable=modeldir pocketsphinx`
@@ -12,11 +13,11 @@ POCKETSPHINX_MODELDIR = `pkg-config --variable=modeldir pocketsphinx`
 all: vokey_service vokey_manager
 
 vokey_service: source/service/VokeyService.cpp source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp source/common/Common.h source/common/Communication.h source/common/Config.h
-	$(COMPILER) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" source/service/VokeyService.cpp  source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service
+	$(COMPILER) $(C_STD) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" source/service/VokeyService.cpp  source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service
 	chmod +x vokey_service
 
 vokey_manager: source/manager/VokeyManager.cpp source/manager/ui/manager.h source/manager/ui/about.h source/common/Common.h source/common/Communication.h source/common/Config.h
-	$(COMPILER) $(LINKERFLAGS_MANAGER) -fPIC source/manager/VokeyManager.cpp -o vokey_manager
+	$(COMPILER) $(C_STD) $(LINKERFLAGS_MANAGER) -fPIC source/manager/VokeyManager.cpp -o vokey_manager
 	chmod +x vokey_manager
 
 source/manager/ui/manager.h: ui/manager.ui

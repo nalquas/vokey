@@ -20,6 +20,6 @@
 
 #include <sys/stat.h>
 
-struct stat st = {0};
+inline struct stat st = {0};
 
 #endif

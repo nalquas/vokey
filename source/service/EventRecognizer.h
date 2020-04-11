@@ -24,6 +24,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
+#include "../common/Communication.h"
 #include "Action.h"
 #include "VoiceRecognizer.h"
 

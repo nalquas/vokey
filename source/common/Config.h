@@ -18,7 +18,7 @@
 #ifndef Config_h
 #define Config_h
 
-#define VOKEY_CONFIG_VERSION 1
+#define VOKEY_CONFIG_VERSION 2
 
 #include <fstream>
 #include <iostream>
@@ -118,6 +118,7 @@ inline void reset_config_to_default() {
 	config = {
 		{"version", VOKEY_CONFIG_VERSION},
 		{"default_profile", "default_profile.json"},
+		{"use_pulseaudio_flush", false},
 		{"listening_on_startup", true}
 	};
 }

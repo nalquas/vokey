@@ -37,16 +37,16 @@ VoiceRecognizer::VoiceRecognizer() {
 	);
 
 	// Pocketsphinx
-	_config = cmd_ln_init(NULL, ps_args(), TRUE,
+	_ps_config = cmd_ln_init(NULL, ps_args(), TRUE,
 	"-hmm", MODELDIR "/en-us/en-us",
 	"-lm", MODELDIR "/en-us/en-us.lm.bin",
 	"-dict", MODELDIR "/en-us/cmudict-en-us.dict",
 	"-logfn", "/dev/null",
 	NULL);
-	if (_config == NULL) {
+	if (_ps_config == NULL) {
 		fprintf(stderr, "Failed to create config object, check log.\n");
 	}
-	_ps = ps_init(_config);
+	_ps = ps_init(_ps_config);
 	if (_ps == NULL) {
 		fprintf(stderr, "Failed to create recognizer, check log.\n");
 	}
@@ -56,7 +56,7 @@ VoiceRecognizer::VoiceRecognizer() {
 VoiceRecognizer::~VoiceRecognizer() {
 	if (_pulse != NULL) pa_simple_free(_pulse);
 	if (_ps != NULL) ps_free(_ps);
-	if (_config != NULL) cmd_ln_free_r(_config);
+	if (_ps_config != NULL) cmd_ln_free_r(_ps_config);
 }
 
 int VoiceRecognizer::process_microphone() {
@@ -82,7 +82,10 @@ int VoiceRecognizer::process_microphone() {
 			break;
 		}*/
 	}
-	pa_simple_flush(_pulse, NULL);
+
+	// If activated in the config, flush the pulseaudio input buffer after each recognition
+	if (config["use_pulseaudio_flush"] != NULL && config["use_pulseaudio_flush"])
+		pa_simple_flush(_pulse, NULL);
 
 	print_log("[INFO] Finished recording\n");
 

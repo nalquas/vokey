@@ -124,8 +124,12 @@ void about_close() {
 
 // Reset what's shown in the global settings GUI to what is currently saved in the config
 void discard_global_settings() {
-	ui_manager->lineEdit_default_profile->setText(QString::fromStdString(config["default_profile"]));
-	ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
+	if (config["default_profile"] != NULL)
+		ui_manager->lineEdit_default_profile->setText(QString::fromStdString(config["default_profile"]));
+	if (config["listening_on_startup"] != NULL)
+		ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
+	if (config["use_pulseaudio_flush"] != NULL)
+		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
 
 // Read the log from disk and show it in the monitor tab
@@ -215,6 +219,7 @@ void reset_global_settings() {
 void save_global_settings() {
 	config["default_profile"] = ui_manager->lineEdit_default_profile->text().toStdString();
 	config["listening_on_startup"] = ui_manager->checkBox_global_listening->isChecked();
+	config["use_pulseaudio_flush"] = ui_manager->checkBox_pa_flush->isChecked();
 	save_config();
 }
 

@@ -70,7 +70,10 @@ void ignore_signal(int signum) {}
 
 void handle_signal(int signum) {
 	if (signum == SIGUSR1) {
-		// SIGUSR1 is used to tell the service to reload the profile
+		// SIGUSR1 is used to tell the service to reload the profile and config
+		print_log("[INFO] Reloading config...\n");
+		ensure_config_exists();
+		load_config();
 		// TODO: store and get which profile to load
 		er->request_reload();
 	}

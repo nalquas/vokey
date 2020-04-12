@@ -22,6 +22,7 @@
 #include <pocketsphinx.h>
 #include <pulse/simple.h>
 
+#include "../common/Config.h"
 #include "../common/Communication.h"
 
 class VoiceRecognizer {
@@ -43,7 +44,7 @@ private:
 	
 	// Decoder variables:
 	ps_decoder_t *_ps = NULL;
-	cmd_ln_t *_config = NULL;
+	cmd_ln_t *_ps_config = NULL;
 	char const *_hyp = "";
 	int16 _buf[2048];
 	int _rv = 0;

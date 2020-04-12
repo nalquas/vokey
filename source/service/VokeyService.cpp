@@ -65,6 +65,9 @@ bool already_running() {
 	return false;
 }
 
+// Ignore a signal entirely
+void ignore_signal(int signum) {}
+
 void handle_signal(int signum) {
 	if (signum == SIGUSR1) {
 		// SIGUSR1 is used to tell the service to reload the profile
@@ -94,6 +97,10 @@ void handle_signal(int signum) {
 }
 
 int main(int argc, char const *argv[]) {
+	// Ignore user-defined signals during startup so that we don't accidentally exit
+	signal(SIGUSR1, ignore_signal);
+	signal(SIGUSR2, ignore_signal);
+
 	// Make sure we are the only instance
 	if (already_running()) {
 		std::cout << "There already is an instance of vokey_service running. Exiting...\n";
@@ -108,7 +115,7 @@ int main(int argc, char const *argv[]) {
 	store_current_profile();
 	clean_log();
 
-	// Activate interrupt handlers
+	// Activate interrupt signal handlers
 	signal(SIGUSR1, handle_signal);
 	signal(SIGUSR2, handle_signal);
 	

@@ -122,6 +122,9 @@ int main(int argc, char const *argv[]) {
 	signal(SIGUSR1, handle_signal);
 	signal(SIGUSR2, handle_signal);
 	
+	// Increase niceness
+	nice(10);
+
 	// Run the service
 	print_ascii_vokey();
 	return er->run();

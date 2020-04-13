@@ -6,3 +6,6 @@ vokey_manager
 
 # Ignore compiled .ui files
 source/manager/ui/**.h
+
+# Ignore local Visual Studio Code configs
+**/.vscode/**

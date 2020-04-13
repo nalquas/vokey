@@ -59,6 +59,7 @@ void about_close(void);
 void discard_global_settings(void);
 void refresh_log(void);
 void refresh_monitor(void);
+void refresh_profile_combos(void);
 void reset_global_settings(void);
 void save_global_settings(void);
 void service_reload_profile(void);
@@ -84,6 +85,7 @@ int main(int argc, char **argv) {
 	manager = new QMainWindow;
 	ui_manager = new Ui_VokeyManager;
 	ui_manager->setupUi(manager);
+	refresh_profile_combos();
 
 	// About Vokey
 	about = new QDialog;
@@ -211,6 +213,18 @@ void refresh_monitor() {
 
 	// Restart the timer
 	timer_monitor->start(1500);
+}
+
+void refresh_profile_combos() {
+	// Clear profile selection comboBoxes
+	ui_manager->comboBox_monitor_profile->clear();
+	ui_manager->comboBox_config_profile->clear();
+
+	// Fill profile selection comboBoxes with profiles from profile_list
+	for (int i = 0; i < profile_list.size(); i++) {
+		ui_manager->comboBox_monitor_profile->addItem(QString::fromStdString(profile_list[i]));
+		ui_manager->comboBox_config_profile->addItem(QString::fromStdString(profile_list[i]));
+	}
 }
 
 // Reset the internal config to default and show those defaults in the GUI.

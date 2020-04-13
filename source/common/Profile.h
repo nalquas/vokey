@@ -101,10 +101,6 @@ inline void refresh_profile_list() {
 		if (p.path().has_filename())
 			profile_list.push_back(p.path().filename().string());
 	}
-
-	for (int i = 0; i < profile_list.size(); i++) {
-		std::cout << profile_list[i] << "\n";
-	}
 }
 
 // Save the given json object under the specified filename inside of the profile directory

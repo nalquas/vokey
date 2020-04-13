@@ -94,7 +94,7 @@ int EventRecognizer::get_action_type(std::string s) {
 	if (s == "print") return action_print;
 	if (s == "bell") return action_bell;
 	if (s == "play_audio") return action_play_audio;
-	if (s == "tts") return action_speak;
+	if (s == "speak") return action_speak;
 	return -1;
 }
 

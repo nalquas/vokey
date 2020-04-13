@@ -62,7 +62,7 @@ inline json generate_default_profile() {
 				{"commands", {"example", "test"}},
 				{"actions", {
 					{
-						{"type", "tts"},
+						{"type", "speak"},
 						{"text", "You have triggered the example event. Congratulations, it is working!"}
 					}
 				}}

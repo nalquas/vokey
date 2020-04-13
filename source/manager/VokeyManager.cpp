@@ -71,6 +71,7 @@ int main(int argc, char **argv) {
 	ensure_config_exists();
 	set_profile_directory(config_location + "/profiles");
 	ensure_default_profile_exists();
+	refresh_profile_list();
 	ensure_log_exists();
 	ensure_tmp_exists();
 	load_config();

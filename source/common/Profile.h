@@ -18,22 +18,26 @@
 #ifndef Profile_h
 #define Profile_h
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <sys/stat.h>
+#include <vector>
 
 #include "Common.h"
 
 using json = nlohmann::json;
 
 inline std::string profile_location = "";
+inline std::vector<std::string> profile_list;
 
 // Header
 
 void ensure_default_profile_exists(void);
 json generate_default_profile(void);
 json load_profile(std::string profile_filename);
+void refresh_profile_list(void);
 void save_profile(json profile, std::string profile_filename);
 void set_profile_directory(std::string path);
 
@@ -51,6 +55,7 @@ inline void ensure_default_profile_exists(void) {
 	}
 }
 
+// Returns a json object containing default profile contents
 inline json generate_default_profile() {
 	json profile = {
 		{"name", "Default Profile"},
@@ -73,6 +78,7 @@ inline json generate_default_profile() {
 	return profile;
 }
 
+// Returns a json object of the profile with from the specified filename
 inline json load_profile(std::string profile_filename) {
 	std::string temp = "";
 
@@ -81,6 +87,22 @@ inline json load_profile(std::string profile_filename) {
 	f.close();
 
 	return json::parse(temp);
+}
+
+inline void refresh_profile_list() {
+	// Clear profile list
+	profile_list.clear();
+
+	// Iterate through all files in the profile directory
+	for (auto& p: std::filesystem::directory_iterator(profile_location.c_str())) {
+		// Add each filename to profile_list
+		if (p.path().has_filename())
+			profile_list.push_back(p.path().filename().string());
+	}
+
+	for (int i = 0; i < profile_list.size(); i++) {
+		std::cout << profile_list[i] << "\n";
+	}
 }
 
 inline void save_profile(json profile, std::string profile_filename) {

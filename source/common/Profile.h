@@ -43,6 +43,7 @@ void set_profile_directory(std::string path);
 
 // Implementation
 
+// Make sure the profile directory and the default_profile file exist
 inline void ensure_default_profile_exists(void) {
 	std::string profile_path = profile_location + "/default_profile.json";
 
@@ -78,7 +79,7 @@ inline json generate_default_profile() {
 	return profile;
 }
 
-// Returns a json object of the profile with from the specified filename
+// Returns a json object of the profile from the specified filename
 inline json load_profile(std::string profile_filename) {
 	std::string temp = "";
 
@@ -89,6 +90,7 @@ inline json load_profile(std::string profile_filename) {
 	return json::parse(temp);
 }
 
+// Refresh profile_list from disk
 inline void refresh_profile_list() {
 	// Clear profile list
 	profile_list.clear();
@@ -105,6 +107,7 @@ inline void refresh_profile_list() {
 	}
 }
 
+// Save the given json object under the specified filename inside of the profile directory
 inline void save_profile(json profile, std::string profile_filename) {
 	std::ofstream of;
 	of.open((profile_location + "/" + profile_filename).c_str());
@@ -112,6 +115,8 @@ inline void save_profile(json profile, std::string profile_filename) {
 	of.close();
 }
 
+// Set the profile directory to the specified path.
+// Should be called as early as possible (before any other functions of Profile.h are called)
 inline void set_profile_directory(std::string path) {
 	profile_location = path;
 

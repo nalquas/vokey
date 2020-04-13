@@ -45,6 +45,7 @@ void save_config(void);
 
 // Implementation
 
+// Make sure the config directory and the config file exist
 inline void ensure_config_exists() {
 	std::string config_path = config_location + "/config.json";
 
@@ -68,6 +69,7 @@ inline std::string get_default_profile_filename() {
 	return std::string(config["default_profile"]);
 }
 
+// Load config from disk
 inline void load_config() {
 	std::string temp = "";
 
@@ -78,6 +80,8 @@ inline void load_config() {
 	config = json::parse(temp);
 }
 
+// Replace config with default values
+// (does not write to disk)
 inline void reset_config_to_default() {
 	config = {
 		{"version", VOKEY_CONFIG_VERSION},
@@ -87,6 +91,7 @@ inline void reset_config_to_default() {
 	};
 }
 
+// Write config to disk
 inline void save_config() {
 	config["version"] = VOKEY_CONFIG_VERSION;
 	

@@ -38,7 +38,7 @@ inline std::string config_location = std::string(getenv("HOME")) + "/.config/vok
 
 // Header
 void ensure_config_exists(void);
-std::string get_default_profile_path(void);
+std::string get_default_profile_filename(void);
 void load_config(void);
 void reset_config_to_default(void);
 void save_config(void);
@@ -47,19 +47,12 @@ void save_config(void);
 
 inline void ensure_config_exists() {
 	std::string config_path = config_location + "/config.json";
-	std::string profile_location = config_location + "/profiles";
-	std::string profile_path = profile_location + "/default_profile.json";
 
 	// Ensure vokey directory exists
 	if (stat(config_location.c_str(), &st) == -1) {
 		mkdir(config_location.c_str(), 0744);
 	}
-
-	// Ensure profile directory exists
-	if (stat(profile_location.c_str(), &st) == -1) {
-		mkdir(profile_location.c_str(), 0744);
-	}
-
+	
 	// Ensure config exists
 	if (stat(config_path.c_str(), &st) == -1) {
 		// No config exists, create default config...
@@ -69,39 +62,10 @@ inline void ensure_config_exists() {
 
 		save_config();
 	}
-
-	// Ensure default profile exists
-	if (stat(profile_path.c_str(), &st) == -1) {
-		// No default profile exists, create default profile...
-		std::cout << "First-time setup, creating default profile at \"" << profile_path << "\"...\n";
-
-		json profile = {
-			{"name", "Default Profile"},
-			{"description", "This is the default profile"},
-			{"events", {
-				{
-					{"title", "Example Event"},
-					{"Description", "This is an example event."},
-					{"commands", {"example", "test"}},
-					{"actions", {
-						{
-							{"type", "tts"},
-							{"text", "You have triggered the example event. Congratulations, it is working!"}
-						}
-					}}
-				}
-			}}
-		};
-
-		std::ofstream of;
-		of.open(profile_path);
-		of << profile.dump(1, '\t');
-		of.close();
-	}
 }
 
-inline std::string get_default_profile_path() {
-	return config_location + "/profiles/" + std::string(config["default_profile"]);
+inline std::string get_default_profile_filename() {
+	return std::string(config["default_profile"]);
 }
 
 inline void load_config() {

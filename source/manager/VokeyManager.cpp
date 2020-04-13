@@ -38,6 +38,7 @@
 
 #include "../common/Config.h"
 #include "../common/Communication.h"
+#include "../common/Profile.h"
 #include "ui/manager.h"
 #include "ui/about.h"
 
@@ -68,6 +69,8 @@ void quit(void);
 
 int main(int argc, char **argv) {
 	ensure_config_exists();
+	set_profile_directory(config_location + "/profiles");
+	ensure_default_profile_exists();
 	ensure_log_exists();
 	ensure_tmp_exists();
 	load_config();

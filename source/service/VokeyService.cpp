@@ -28,6 +28,7 @@
 // Vokey includes
 #include "../common/Config.h"
 #include "../common/Communication.h"
+#include "../common/Profile.h"
 #include "Candy.h"
 #include "EventRecognizer.h"
 
@@ -113,7 +114,9 @@ int main(int argc, char const *argv[]) {
 	// Prepare for service
 	ensure_config_exists();
 	load_config();
-	er = new EventRecognizer(get_default_profile_path(), config["listening_on_startup"]);
+	set_profile_directory(config_location + "/profiles");
+	ensure_default_profile_exists();
+	er = new EventRecognizer(get_default_profile_filename(), config["listening_on_startup"]);
 	store_listening();
 	store_current_profile();
 	clean_log();

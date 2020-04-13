@@ -30,7 +30,7 @@ int EventRecognizer::run() {
 		// Handle reload requests
 		if (_reload_requested) {
 			print_log("\n[INFO] Reloading profile...\n");
-			load_profile(_reload_profile_file_path);
+			_profile = load_profile(_reload_profile_file_path);
 			_reload_requested = false;
 		}
 
@@ -96,19 +96,6 @@ int EventRecognizer::get_action_type(std::string s) {
 	if (s == "play_audio") return action_play_audio;
 	if (s == "tts") return action_speak;
 	return -1;
-}
-
-void EventRecognizer::load_profile(std::string file_path) {
-	load_profile(file_path.c_str());
-}
-void EventRecognizer::load_profile(const char* file_path) {
-	std::string temp = "";
-
-	std::ifstream f(file_path);
-	temp.assign( (std::istreambuf_iterator<char>(f) ), (std::istreambuf_iterator<char>()));
-	f.close();
-
-	_profile = json::parse(temp);
 }
 
 void EventRecognizer::request_reload(std::string file_path) {

@@ -25,6 +25,7 @@
 #include <nlohmann/json.hpp>
 
 #include "../common/Communication.h"
+#include "../common/Profile.h"
 #include "Action.h"
 #include "VoiceRecognizer.h"
 
@@ -52,8 +53,6 @@ public:
 	int run(void);
 private:
 	int get_action_type(std::string s);
-	void load_profile(std::string file_path);
-	void load_profile(const char* file_path);
 	bool _listening;
 	Action _action;
 	json _profile;

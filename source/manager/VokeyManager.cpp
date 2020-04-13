@@ -89,6 +89,7 @@ int main(int argc, char **argv) {
 	about = new QDialog;
 	ui_about = new Ui_VokeyAbout;
 	ui_about->setupUi(about);
+	ui_about->label_version->setText(QString::fromStdString("Version: " + std::string(VOKEY_VERSION)));
 
 	// Connections: VokeyManager
 	QObject::connect(ui_manager->actionQuit, &QAction::triggered, quit);

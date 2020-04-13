@@ -72,11 +72,19 @@ void ignore_signal(int signum) {}
 void handle_signal(int signum) {
 	if (signum == SIGUSR1) {
 		// SIGUSR1 is used to tell the service to reload the profile and config
+		
+		// Reload global config
 		print_log("[INFO] Reloading config...\n");
 		ensure_config_exists();
 		load_config();
-		// TODO: store and get which profile to load
-		er->request_reload();
+		
+		// Request EventRecognizer to load the specified profile
+		std::string temp = "";
+		std::ifstream ifs;
+		ifs.open(VOKEY_TMP_PROFILE);
+		temp.assign( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()));
+		ifs.close();
+		er->request_reload(temp);
 	}
 	else if (signum == SIGUSR2) {
 		// SIGUSR2 is used to tell the service to change listening status

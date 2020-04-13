@@ -29,7 +29,7 @@ int EventRecognizer::run() {
 	for (;;) {
 		// Handle reload requests
 		if (_reload_requested) {
-			print_log("\n[INFO] Reloading profile...\n");
+			print_log("\n[INFO] Loading profile " + _reload_profile_file_path + "\n");
 			_profile = load_profile(_reload_profile_file_path);
 			_reload_requested = false;
 		}

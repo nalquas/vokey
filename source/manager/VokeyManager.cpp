@@ -23,6 +23,7 @@
 #include <QApplication>
 #include <QAction>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QObject>
@@ -87,6 +88,16 @@ int main(int argc, char **argv) {
 	ui_manager->setupUi(manager);
 	refresh_profile_combos();
 
+	// Get currently running profile and show in profile selection comboBox
+	if (get_service_pid() >= 0 && stat(VOKEY_TMP_PROFILE, &st) != -1) {
+		std::string temp_profile_name = "";
+		std::ifstream ifs;
+		ifs.open(VOKEY_TMP_PROFILE);
+		temp_profile_name.assign( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()));
+		ifs.close();
+		ui_manager->comboBox_monitor_profile->setCurrentIndex(ui_manager->comboBox_monitor_profile->findText(QString::fromStdString(temp_profile_name)));
+	}
+
 	// About Vokey
 	about = new QDialog;
 	ui_about = new Ui_VokeyAbout;
@@ -102,8 +113,9 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::Save), &QPushButton::clicked, save_global_settings);
 	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::Discard), &QPushButton::clicked, discard_global_settings);
 	QObject::connect(ui_manager->buttonBox_global->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked, reset_global_settings);
-	QObject::connect(ui_manager->pushButton_monitor_profile_refresh, &QPushButton::clicked, refresh_profile_list);
-	QObject::connect(ui_manager->pushButton_config_profile_refresh, &QPushButton::clicked, refresh_profile_list);
+	QObject::connect(ui_manager->pushButton_monitor_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
+	QObject::connect(ui_manager->pushButton_config_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
+	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);

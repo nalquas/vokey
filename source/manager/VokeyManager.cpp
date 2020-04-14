@@ -230,6 +230,10 @@ void refresh_monitor() {
 }
 
 void refresh_profile_combos() {
+	// Save current selection to restore later
+	std::string selection_monitor = ui_manager->comboBox_monitor_profile->currentText().toStdString();
+	std::string selection_config = ui_manager->comboBox_config_profile->currentText().toStdString();
+
 	// Clear profile selection comboBoxes
 	ui_manager->comboBox_monitor_profile->clear();
 	ui_manager->comboBox_config_profile->clear();
@@ -239,6 +243,15 @@ void refresh_profile_combos() {
 		ui_manager->comboBox_monitor_profile->addItem(QString::fromStdString(profile_list[i]));
 		ui_manager->comboBox_config_profile->addItem(QString::fromStdString(profile_list[i]));
 	}
+
+	// Restore previous selection if it still exists
+	int selection_monitor_index = ui_manager->comboBox_monitor_profile->findText(QString::fromStdString(selection_monitor));
+	if (selection_monitor_index >= 0)
+		ui_manager->comboBox_monitor_profile->setCurrentIndex(selection_monitor_index);
+	
+	int selection_config_index = ui_manager->comboBox_config_profile->findText(QString::fromStdString(selection_config));
+	if (selection_config_index >= 0)
+		ui_manager->comboBox_config_profile->setCurrentIndex(selection_config_index);
 }
 
 // Reset the internal config to default and show those defaults in the GUI.

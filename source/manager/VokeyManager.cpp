@@ -20,6 +20,7 @@
 #include <csignal>
 #include <fstream>
 #include <iostream>
+#include <nlohmann/json.hpp>
 #include <QApplication>
 #include <QAction>
 #include <QCheckBox>
@@ -43,6 +44,10 @@
 #include "ui/manager.h"
 #include "ui/about.h"
 
+using json = nlohmann::json;
+
+// GUI
+
 QApplication *application;
 QMainWindow *manager;
 Ui_VokeyManager *ui_manager;
@@ -53,11 +58,16 @@ Ui_VokeyAbout *ui_about;
 
 QTimer *timer_monitor;
 
+// Variables
+
+json selected_profile = NULL;
+
 // Function headers
 
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
+void refresh_event_list(void);
 void refresh_log(void);
 void refresh_monitor(void);
 void refresh_profile_combos(void);
@@ -116,6 +126,7 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_monitor_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
 	QObject::connect(ui_manager->pushButton_config_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
 	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
+	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), refresh_event_list);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -127,6 +138,9 @@ int main(int argc, char **argv) {
 	timer_monitor = new QTimer();
 	QObject::connect(timer_monitor, &QTimer::timeout, refresh_monitor);
 	refresh_monitor();
+
+	// Initialize config tab (used to edit profiles and events)
+	refresh_event_list();
 
 	// Show application to user
 	manager->show();
@@ -151,6 +165,19 @@ void discard_global_settings() {
 		ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
 	if (config["use_pulseaudio_flush"] != NULL)
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
+}
+
+void refresh_event_list() {
+	// Load selected profile from disk
+	selected_profile = load_profile(ui_manager->comboBox_config_profile->currentText().toStdString());
+
+	// Clear event list
+	ui_manager->listWidget_event->clear();
+
+	// Fill event list
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["title"])));
+	}
 }
 
 // Read the log from disk and show it in the monitor tab

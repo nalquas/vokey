@@ -27,10 +27,12 @@
 #include <QComboBox>
 #include <QDialog>
 #include <QDialogButtonBox>
+#include <QListWidget>
 #include <QObject>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QString>
+#include <QTextDocument>
 #include <QTimer>
 #include <string>
 #include <sys/stat.h>
@@ -67,7 +69,9 @@ json selected_profile = NULL;
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
+json get_event_from_profile(std::string event_title);
 void refresh_event_list(void);
+void refresh_event_selected(void);
 void refresh_log(void);
 void refresh_monitor(void);
 void refresh_profile_combos(void);
@@ -127,6 +131,7 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_config_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
 	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
 	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), refresh_event_list);
+	QObject::connect(ui_manager->listWidget_event, &QListWidget::itemClicked, refresh_event_selected);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -167,6 +172,19 @@ void discard_global_settings() {
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
 
+json get_event_from_profile(std::string event_title) {
+	json temp = NULL;
+
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		if (std::string(selected_profile["events"][i]["title"]) == event_title) {
+			temp = selected_profile["events"][i];
+			break;
+		}
+	}
+
+	return temp;
+}
+
 void refresh_event_list() {
 	// Load selected profile from disk
 	selected_profile = load_profile(ui_manager->comboBox_config_profile->currentText().toStdString());
@@ -178,6 +196,26 @@ void refresh_event_list() {
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
 		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["title"])));
 	}
+}
+
+void refresh_event_selected() {
+	// Get event contents from profile
+	json event = get_event_from_profile(ui_manager->listWidget_event->currentItem()->text().toStdString());
+
+	// Overwrite GUI contents with selected event's contents
+
+	// Title and description
+	ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(event["title"])));
+	ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(event["description"])));
+	
+	// Commands
+	std::string temp_commands = "";
+	for (int i = 0; i < event["commands"].size(); i++) {
+		temp_commands += std::string(event["commands"][i]) + "\n";
+	}
+	ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
+
+	// TODO: Load actions and show them somehow
 }
 
 // Read the log from disk and show it in the monitor tab

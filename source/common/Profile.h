@@ -64,7 +64,7 @@ inline json generate_default_profile() {
 		{"events", {
 			{
 				{"title", "Example Event"},
-				{"Description", "This is an example event."},
+				{"description", "This is an example event."},
 				{"commands", {"example", "test"}},
 				{"actions", {
 					{

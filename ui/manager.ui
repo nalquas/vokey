@@ -47,6 +47,9 @@
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Vokey Event Log&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
+          <property name="lineWrapMode">
+           <enum>QTextEdit::NoWrap</enum>
+          </property>
          </widget>
         </item>
         <item>
@@ -258,6 +261,9 @@
              <widget class="QListWidget" name="listWidget_event">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of events of this profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="sortingEnabled">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -580,8 +586,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>510</width>
-             <height>100</height>
+             <width>764</width>
+             <height>467</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">

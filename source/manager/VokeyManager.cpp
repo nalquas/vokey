@@ -204,11 +204,11 @@ void refresh_event_selected() {
 
 	// Overwrite GUI contents with selected event's contents
 
-	// Title and description
+	// Show title and description
 	ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(event["title"])));
 	ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(event["description"])));
 	
-	// Commands
+	// Show commands
 	std::string temp_commands = "";
 	for (int i = 0; i < event["commands"].size(); i++) {
 		temp_commands += std::string(event["commands"][i]) + "\n";

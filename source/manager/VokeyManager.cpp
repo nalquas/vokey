@@ -222,12 +222,24 @@ void refresh_event_selected() {
 		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
 
 		// TODO: Load actions and show them somehow
+
+		// Enable GUI
+		ui_manager->lineEdit_event_title->setEnabled(true);
+		ui_manager->lineEdit_event_description->setEnabled(true);
+		ui_manager->plainTextEdit_commands->setEnabled(true);
+		// TODO: Enable action interface
 	}
 	else {
-		// Nothing selected, clear GUI
+		// Nothing selected, clear and disable GUI
 		ui_manager->lineEdit_event_title->setText(QString::fromStdString(""));
+		ui_manager->lineEdit_event_title->setEnabled(false);
 		ui_manager->lineEdit_event_description->setText(QString::fromStdString(""));
+		ui_manager->lineEdit_event_description->setEnabled(false);
 		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(""));
+		ui_manager->plainTextEdit_commands->setEnabled(false);
+		// TODO: Clear and disable action interface
+
+		selected_event = NULL;
 	}
 }
 

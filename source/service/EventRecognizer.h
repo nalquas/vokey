@@ -36,7 +36,8 @@ enum action_types {
 	action_print,
 	action_bell,
 	action_play_audio,
-	action_speak
+	action_speak,
+	action_key
 };
 
 class EventRecognizer {

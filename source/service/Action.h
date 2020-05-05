@@ -22,6 +22,9 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
 
 class Action {
 public:
@@ -31,6 +34,7 @@ public:
 	void bell(void);
 	void play_audio(const char* file_path);
 	void speak(const char* text);
+	void press_key(unsigned int keycode);
 };
 
 #endif

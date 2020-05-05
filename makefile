@@ -6,7 +6,7 @@
 
 COMPILER = g++
 C_STD = -std=c++17
-LINKERFLAGS_SERVICE = `pkg-config --cflags --libs pocketsphinx sphinxbase`
+LINKERFLAGS_SERVICE = `pkg-config --cflags --libs pocketsphinx sphinxbase` -lX11 -lXtst
 LINKERFLAGS_MANAGER = `pkg-config --cflags --libs Qt5Widgets`
 POCKETSPHINX_MODELDIR = `pkg-config --variable=modeldir pocketsphinx`
 VOKEY_VERSION = `cat version`

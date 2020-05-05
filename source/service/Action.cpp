@@ -49,3 +49,11 @@ void Action::speak(const char* text) {
 	strcat(buf, "\" | festival --tts &");
 	execute(buf);
 }
+
+void Action::press_key(unsigned int keycode) {
+	// TODO: Support key combinations
+	Display *display = XOpenDisplay(NULL);
+	XTestFakeKeyEvent(display, keycode, true, 0);
+	XTestFakeKeyEvent(display, keycode, false, 0);
+	XFlush(display);
+}

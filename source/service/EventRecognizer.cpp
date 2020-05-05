@@ -70,6 +70,9 @@ int EventRecognizer::run() {
 							case action_speak:
 								_action.speak(std::string(_profile["events"][i]["actions"][k]["text"]).c_str());
 								break;
+							case action_key:
+								_action.press_key((unsigned int)(_profile["events"][i]["actions"][k]["keycode"]));
+								break;
 							default:
 								print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
 								break;
@@ -95,6 +98,7 @@ int EventRecognizer::get_action_type(std::string s) {
 	if (s == "bell") return action_bell;
 	if (s == "play_audio") return action_play_audio;
 	if (s == "speak") return action_speak;
+	if (s == "key") return action_key;
 	return -1;
 }
 

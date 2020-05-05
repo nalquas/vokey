@@ -63,6 +63,7 @@ QTimer *timer_monitor;
 // Variables
 
 json selected_profile = NULL;
+json selected_event = NULL;
 
 // Function headers
 
@@ -196,26 +197,38 @@ void refresh_event_list() {
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
 		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["title"])));
 	}
+
+	// Refresh the selected event
+	refresh_event_selected();
 }
 
 void refresh_event_selected() {
 	// Get event contents from profile
-	json event = get_event_from_profile(ui_manager->listWidget_event->currentItem()->text().toStdString());
+	QListWidgetItem *current_item = ui_manager->listWidget_event->currentItem();
+	if (current_item != NULL) {
+		selected_event = get_event_from_profile(current_item->text().toStdString());
+		
+		// Overwrite GUI contents with selected event's contents
 
-	// Overwrite GUI contents with selected event's contents
+		// Show title and description
+		ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(selected_event["title"])));
+		ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(selected_event["description"])));
+		
+		// Show commands
+		std::string temp_commands = "";
+		for (int i = 0; i < selected_event["commands"].size(); i++) {
+			temp_commands += std::string(selected_event["commands"][i]) + "\n";
+		}
+		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
 
-	// Show title and description
-	ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(event["title"])));
-	ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(event["description"])));
-	
-	// Show commands
-	std::string temp_commands = "";
-	for (int i = 0; i < event["commands"].size(); i++) {
-		temp_commands += std::string(event["commands"][i]) + "\n";
+		// TODO: Load actions and show them somehow
 	}
-	ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
-
-	// TODO: Load actions and show them somehow
+	else {
+		// Nothing selected, clear GUI
+		ui_manager->lineEdit_event_title->setText(QString::fromStdString(""));
+		ui_manager->lineEdit_event_description->setText(QString::fromStdString(""));
+		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(""));
+	}
 }
 
 // Read the log from disk and show it in the monitor tab
@@ -317,6 +330,9 @@ void refresh_profile_combos() {
 	int selection_config_index = ui_manager->comboBox_config_profile->findText(QString::fromStdString(selection_config));
 	if (selection_config_index >= 0)
 		ui_manager->comboBox_config_profile->setCurrentIndex(selection_config_index);
+	
+	// Refresh event list
+	refresh_event_list();
 }
 
 // Reset the internal config to default and show those defaults in the GUI.

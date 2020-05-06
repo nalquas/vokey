@@ -18,6 +18,7 @@
 // Includes
 
 #include <csignal>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -341,6 +342,7 @@ void refresh_monitor() {
 
 	// Only allow the listening checkbox to be interacted with if the service is running
 	ui_manager->checkBox_listening->setEnabled(service_running);
+	ui_manager->comboBox_monitor_profile->setEnabled(service_running);
 
 	if (service_running) {
 		// If the tmp-file for listening exists, get the current listening status and show it in the listening checkbox
@@ -366,6 +368,20 @@ void refresh_monitor() {
 		else {
 			// As the listening file doesn't exist yet, assume default settings
 			ui_manager->checkBox_listening->setChecked(config["listening_on_startup"]);
+		}
+
+		// If the tmp-file for profile exists, get the current profile and show it in the combobox
+		if(stat(VOKEY_TMP_PROFILE, &st) != -1) {
+			std::string temp = "";
+			std::ifstream ifs;
+			ifs.open(VOKEY_TMP_PROFILE);
+			ifs >> temp;
+			ifs.close();
+
+			// If it exists, show the selected profile in the comboBox
+			int selection_monitor_index = ui_manager->comboBox_monitor_profile->findText(QString::fromStdString(temp));
+			if (selection_monitor_index >= 0)
+				ui_manager->comboBox_monitor_profile->setCurrentIndex(selection_monitor_index);
 		}
 
 		// Refresh the log view of the monitor tab
@@ -437,7 +453,10 @@ void service_reload_profile() {
 		// Send signal for service to fetch data
 		kill(pid, SIGUSR1);
 	}
-	// TODO If the service does not exist, start it
+	else {
+		// If the service does not exist, start it in the background
+		system("nohup vokey_service &>/dev/null &");
+	}
 }
 
 // Tell the service to change its listening state to what the listening checkbox says

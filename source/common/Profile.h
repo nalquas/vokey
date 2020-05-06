@@ -18,6 +18,8 @@
 #ifndef Profile_h
 #define Profile_h
 
+#define VOKEY_PROFILE_VERSION 1
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -68,6 +70,7 @@ inline json generate_default_profile() {
 				{"commands", {"example", "test"}},
 				{"actions", {
 					{
+						{"title", "say example event"},
 						{"type", "speak"},
 						{"text", "You have triggered the example event. Congratulations, it is working!"}
 					}

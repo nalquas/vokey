@@ -64,13 +64,17 @@ QTimer *timer_monitor;
 
 json selected_profile = NULL;
 json selected_event = NULL;
+json selected_action = NULL;
 
 // Function headers
 
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
+json get_action_from_event(std::string action_title);
 json get_event_from_profile(std::string event_title);
+void refresh_action_list(void);
+void refresh_action_selected(void);
 void refresh_event_list(void);
 void refresh_event_selected(void);
 void refresh_log(void);
@@ -133,6 +137,7 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
 	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), refresh_event_list);
 	QObject::connect(ui_manager->listWidget_event, &QListWidget::itemClicked, refresh_event_selected);
+	QObject::connect(ui_manager->listWidget_action, &QListWidget::itemClicked, refresh_action_selected);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -173,6 +178,19 @@ void discard_global_settings() {
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
 
+json get_action_from_event(std::string action_title) {
+	json temp = NULL;
+
+	for (int i = 0; i < selected_event["actions"].size(); i++) {
+		if (std::string(selected_event["actions"][i]["title"]) == action_title) {
+			temp = selected_event["actions"][i];
+			break;
+		}
+	}
+
+	return temp;
+}
+
 json get_event_from_profile(std::string event_title) {
 	json temp = NULL;
 
@@ -184,6 +202,40 @@ json get_event_from_profile(std::string event_title) {
 	}
 
 	return temp;
+}
+
+void refresh_action_list() {
+	// Clear action list
+	ui_manager->listWidget_action->clear();
+
+	if (selected_event != NULL) {
+		// Fill action list
+		for (int i = 0; i < selected_event["actions"].size(); i++) {
+			ui_manager->listWidget_action->addItem(QString::fromStdString(std::string(selected_event["actions"][i]["title"])));
+		}
+	}
+
+	// Refresh the selected action
+	refresh_action_selected();
+}
+
+void refresh_action_selected() {
+	// Get action contents from event
+	QListWidgetItem *current_item = ui_manager->listWidget_action->currentItem();
+	if (current_item != NULL) {
+		selected_action = get_action_from_event(current_item->text().toStdString());
+
+		// Enable GUI
+		ui_manager->comboBox_action_type->setEnabled(true);
+		ui_manager->lineEdit_action_parameter->setEnabled(true);
+	}
+	else {
+		// Nothing selected, clear and disable GUI
+		ui_manager->comboBox_action_type->setEnabled(false);
+		ui_manager->lineEdit_action_parameter->setEnabled(false);
+
+		selected_action = NULL;
+	}
 }
 
 void refresh_event_list() {
@@ -221,8 +273,6 @@ void refresh_event_selected() {
 		}
 		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
 
-		// TODO: Load actions and show them somehow
-
 		// Enable GUI
 		ui_manager->lineEdit_event_title->setEnabled(true);
 		ui_manager->lineEdit_event_description->setEnabled(true);
@@ -230,7 +280,6 @@ void refresh_event_selected() {
 		ui_manager->listWidget_action->setEnabled(true);
 		ui_manager->pushButton_add_action->setEnabled(true);
 		ui_manager->pushButton_remove_action->setEnabled(true);
-		// TODO: Refresh action interface
 	}
 	else {
 		// Nothing selected, clear and disable GUI
@@ -243,10 +292,12 @@ void refresh_event_selected() {
 		ui_manager->listWidget_action->setEnabled(false);
 		ui_manager->pushButton_add_action->setEnabled(false);
 		ui_manager->pushButton_remove_action->setEnabled(false);
-		// TODO: Refresh action interface
 
 		selected_event = NULL;
 	}
+
+	// Make sure the action list is also refreshed
+	refresh_action_list();
 }
 
 // Read the log from disk and show it in the monitor tab

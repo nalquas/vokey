@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1024</width>
     <height>600</height>
    </rect>
   </property>
@@ -351,7 +351,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>376</width>
+               <width>370</width>
                <height>425</height>
               </rect>
              </property>
@@ -402,11 +402,11 @@
               <item row="3" column="0">
                <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>Action</string>
+                 <string>Actions</string>
                 </property>
                </widget>
               </item>
-              <item row="3" column="1">
+              <item row="4" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <property name="topMargin">
                  <number>0</number>
@@ -415,17 +415,17 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QSpinBox" name="spinBox_action">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Edit action number X&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                  <property name="suffix">
-                   <string/>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
                   </property>
-                  <property name="maximum">
-                   <number>0</number>
-                  </property>
-                 </widget>
+                 </spacer>
                 </item>
                 <item>
                  <widget class="QPushButton" name="pushButton_add_action">
@@ -479,29 +479,42 @@
                   </property>
                  </widget>
                 </item>
-                <item>
-                 <spacer name="horizontalSpacer_3">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                </layout>
               </item>
-              <item row="5" column="0">
+              <item row="3" column="1">
+               <widget class="QListWidget" name="listWidget_action">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of actions of this event&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+          </item>
+          <item>
+           <widget class="QScrollArea" name="scrollArea_3">
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scrollAreaWidgetContents_3">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>298</width>
+               <height>425</height>
+              </rect>
+             </property>
+             <layout class="QFormLayout" name="formLayout">
+              <item row="0" column="0">
                <widget class="QLabel" name="label_6">
                 <property name="text">
                  <string>Action Type</string>
                 </property>
                </widget>
               </item>
-              <item row="5" column="1">
+              <item row="0" column="1">
                <widget class="QComboBox" name="comboBox_action_type">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -542,14 +555,14 @@
                 </item>
                </widget>
               </item>
-              <item row="6" column="0">
-               <widget class="QLabel" name="label_7">
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_action_parameter">
                 <property name="text">
                  <string>Parameter</string>
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
+              <item row="1" column="1">
                <widget class="QLineEdit" name="lineEdit_action_parameter">
                 <property name="toolTip">
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type-specific parameters of the selected action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -586,8 +599,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>764</width>
-             <height>467</height>
+             <width>510</width>
+             <height>100</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -644,7 +657,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1024</width>
      <height>30</height>
     </rect>
    </property>

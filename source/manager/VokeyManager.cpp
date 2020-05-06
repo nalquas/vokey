@@ -227,7 +227,10 @@ void refresh_event_selected() {
 		ui_manager->lineEdit_event_title->setEnabled(true);
 		ui_manager->lineEdit_event_description->setEnabled(true);
 		ui_manager->plainTextEdit_commands->setEnabled(true);
-		// TODO: Enable action interface
+		ui_manager->listWidget_action->setEnabled(true);
+		ui_manager->pushButton_add_action->setEnabled(true);
+		ui_manager->pushButton_remove_action->setEnabled(true);
+		// TODO: Refresh action interface
 	}
 	else {
 		// Nothing selected, clear and disable GUI
@@ -237,7 +240,10 @@ void refresh_event_selected() {
 		ui_manager->lineEdit_event_description->setEnabled(false);
 		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(""));
 		ui_manager->plainTextEdit_commands->setEnabled(false);
-		// TODO: Clear and disable action interface
+		ui_manager->listWidget_action->setEnabled(false);
+		ui_manager->pushButton_add_action->setEnabled(false);
+		ui_manager->pushButton_remove_action->setEnabled(false);
+		// TODO: Refresh action interface
 
 		selected_event = NULL;
 	}

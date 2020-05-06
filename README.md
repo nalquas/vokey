@@ -33,6 +33,14 @@ make
 Vokey currently requires several terminal commands to be available for its action system.
 Namely, these are `aplay` and `festival`.
 
+```
+# On Ubuntu-based systems, install the dependencies using:
+sudo apt install alsa-utils festival
+
+# On Arch-based systems, install the dependencies using:
+sudo pacman -Syu alsa-utils festival festival-english
+```
+
 To install Vokey on your system, simply execute:
 
 ```

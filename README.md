@@ -33,17 +33,24 @@ make
 Vokey currently requires several terminal commands to be available for its action system.
 Namely, these are `aplay` and `festival`.
 
+To install Vokey on your system, simply execute:
+
+```
+bash ./linux_install.sh
+```
+
 ## Usage
 Vokey is split into two sub-programs.
 
-The main program is a service reacting to your voice and acting according to a selected profile, executed using:
+The main program is a background service reacting to your voice in a manner described by the selected profile:
 
 ```
-./vokey_service
+vokey_service
 ```
 
-The second program is a GUI-based manager used to configure the service. You *could* use the service without this if you prefer editing .json files manually.
+The second program is a GUI-based manager used to configure the service.
+You *could* use the service without this if you prefer editing .json files manually.
 
 ```
-./vokey_manager
+vokey_manager
 ```

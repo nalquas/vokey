@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=Vokey Manager
+Name[de]=Vokey Manager
+GenericName=Voice Macro Application
+GenericName[de]=Sprach-Makro-Programm
+Comment=Management application for Vokey, a voice-based macro application
+Comment[de]=Verwaltungsprogramm für Vokey, ein sprachbasiertes Makro-Programm
+
+Type=Application
+Categories=Audio;Utility;
+Keywords=Voice;Macro;
+
+Exec=vokey_manager
+Terminal=false

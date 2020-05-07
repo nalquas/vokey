@@ -37,7 +37,7 @@ int EventRecognizer::run() {
 		// Handle listening
 		if (_listening) {
 			// Voice processing
-			if (_vr.process_microphone() != 0) return -1;
+			if (_vr.process_microphone(true) != 0) return -1;
 
 			// Text handling
 			print_log("[INFO] Text: " + _vr.get_text() + "\n");
@@ -85,6 +85,10 @@ int EventRecognizer::run() {
 					}
 				}
 			}
+		}
+		else {
+			// Not listening, discard microphone input
+			if (_vr.process_microphone(false) != 0) return -1;
 		}
 	}
 

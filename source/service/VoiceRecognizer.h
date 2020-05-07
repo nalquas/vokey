@@ -32,7 +32,7 @@ public:
 	~VoiceRecognizer(void);
 	
 	// Interfacing methods
-	int process_microphone(void);
+	int process_microphone(bool process);
 	std::string get_text(void);
 	int get_score(void);
 	void request_finish(void);

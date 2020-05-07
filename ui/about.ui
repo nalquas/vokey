@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>About Vokey</string>
   </property>
+  <property name="windowIcon">
+   <iconset theme="vokey"/>
+  </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
   </property>

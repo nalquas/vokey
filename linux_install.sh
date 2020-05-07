@@ -8,7 +8,7 @@ if !(test -f "vokey_service";) || !(test -f "vokey_manager";) then
 	echo "To run this script, you need to be in the repository's root folder."
 	echo "Make sure you run \"make\" before you run this script."
 else
-	echo "This installer will install Vokey to /usr/bin and create a .desktop file."
+	echo "This installer will install Vokey to your system."
 	echo "You will need to provide root permissions if prompted."
 	echo
 	read -p "Proceed? [y/n]: " -n 1 -r
@@ -19,6 +19,7 @@ else
 		sudo cp -f ./vokey_service /usr/bin/vokey_service
 		sudo cp -f ./vokey_manager /usr/bin/vokey_manager
 		sudo cp -f "./desktop/Vokey Manager.desktop" "/usr/share/applications/Vokey Manager.desktop"
+		sudo cp -f ./desktop/vokey.svg /usr/share/icons/hicolor/scalable/apps/vokey.svg
 		echo "Done!"
 	fi
 fi

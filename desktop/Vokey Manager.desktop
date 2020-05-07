@@ -6,6 +6,8 @@ GenericName[de]=Sprach-Makro-Programm
 Comment=Management application for Vokey, a voice-based macro application
 Comment[de]=Verwaltungsprogramm für Vokey, ein sprachbasiertes Makro-Programm
 
+Icon=vokey
+
 Type=Application
 Categories=Audio;Utility;
 Keywords=Voice;Macro;

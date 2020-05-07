@@ -4,10 +4,10 @@
 # All it does is remove Vokey's binaries from /usr/bin.
 # The config files are not touched, however, letting profiles persist.
 
-if !(test -f "/usr/bin/vokey_service";) && !(test -f "/usr/bin/vokey_manager";) && !(test -f "/usr/share/applications/Vokey Manager.desktop";) then
-	echo "ERROR: Neither vokey_service nor vokey_manager are installed in /usr/bin and there's no .desktop file."
+if !(test -f "/usr/bin/vokey_service";) && !(test -f "/usr/bin/vokey_manager";) && !(test -f "/usr/share/applications/Vokey Manager.desktop";) && !(test -f "/usr/share/icons/hicolor/scalable/apps/vokey.svg";) then
+	echo "ERROR: Nothing to uninstall."
 else
-	echo "This uninstall script will remove Vokey from /usr/bin and remove the .desktop file."
+	echo "This uninstall script will remove Vokey from your system."
 	echo "You will need to provide root permissions if prompted."
 	echo
 	read -p "Proceed? [y/n]: " -n 1 -r
@@ -18,6 +18,7 @@ else
 		if test -f "/usr/bin/vokey_service"; then sudo rm /usr/bin/vokey_service; fi
 		if test -f "/usr/bin/vokey_manager"; then sudo rm /usr/bin/vokey_manager; fi
 		if test -f "/usr/share/applications/Vokey Manager.desktop"; then sudo rm "/usr/share/applications/Vokey Manager.desktop"; fi
+		if test -f "/usr/share/icons/hicolor/scalable/apps/vokey.svg"; then sudo rm /usr/share/icons/hicolor/scalable/apps/vokey.svg; fi
 		echo "Done!"
 	fi
 fi

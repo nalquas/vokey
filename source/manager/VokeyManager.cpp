@@ -83,6 +83,8 @@ void refresh_monitor(void);
 void refresh_profile_combos(void);
 void reset_global_settings(void);
 void save_global_settings(void);
+void service_start(void);
+void service_kill(void);
 void service_reload_profile(void);
 void service_set_listening(void);
 void quit(void);
@@ -126,6 +128,7 @@ int main(int argc, char **argv) {
 
 	// Connections: VokeyManager
 	QObject::connect(ui_manager->actionQuit, &QAction::triggered, quit);
+	QObject::connect(ui_manager->actionKill_vokey_service, &QAction::triggered, service_kill);
 	QObject::connect(ui_manager->actionAbout, &QAction::triggered, about_open);
 	QObject::connect(ui_manager->pushButton_restart, &QPushButton::clicked, service_reload_profile);
 	QObject::connect(ui_manager->checkBox_listening, &QCheckBox::stateChanged, service_set_listening);
@@ -435,6 +438,15 @@ void save_global_settings() {
 	save_config();
 }
 
+
+void service_start() {
+	system("nohup vokey_service &>/dev/null &");
+}
+
+void service_kill() {
+	system("killall vokey_service");
+}
+
 // Tell the service to reload into the profile selected in the monitor tab
 void service_reload_profile() {
 	pid_t pid = get_service_pid();
@@ -455,7 +467,7 @@ void service_reload_profile() {
 	}
 	else {
 		// If the service does not exist, start it in the background
-		system("nohup vokey_service &>/dev/null &");
+		service_start();
 	}
 }
 

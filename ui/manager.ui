@@ -351,8 +351,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>370</width>
-               <height>425</height>
+               <width>201</width>
+               <height>308</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout_3">
@@ -502,8 +502,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>298</width>
-               <height>425</height>
+               <width>191</width>
+               <height>82</height>
               </rect>
              </property>
              <layout class="QFormLayout" name="formLayout">
@@ -671,6 +671,7 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionKill_vokey_service"/>
     <addaction name="actionQuit"/>
    </widget>
    <addaction name="menuFile"/>
@@ -692,6 +693,14 @@
    </property>
    <property name="text">
     <string>Quit</string>
+   </property>
+  </action>
+  <action name="actionKill_vokey_service">
+   <property name="icon">
+    <iconset theme="process-stop"/>
+   </property>
+   <property name="text">
+    <string>Kill vokey_service</string>
    </property>
   </action>
  </widget>

@@ -18,7 +18,7 @@
 #ifndef Profile_h
 #define Profile_h
 
-#define VOKEY_PROFILE_VERSION 1
+#define VOKEY_PROFILE_VERSION 2
 
 #include <filesystem>
 #include <fstream>
@@ -61,6 +61,7 @@ inline void ensure_default_profile_exists(void) {
 // Returns a json object containing default profile contents
 inline json generate_default_profile() {
 	json profile = {
+		{"version", VOKEY_PROFILE_VERSION},
 		{"name", "Default Profile"},
 		{"description", "This is the default profile"},
 		{"events", {
@@ -72,7 +73,7 @@ inline json generate_default_profile() {
 					{
 						{"title", "say example event"},
 						{"type", "speak"},
-						{"text", "You have triggered the example event. Congratulations, it is working!"}
+						{"parameter", "You have triggered the example event. Congratulations, it is working!"}
 					}
 				}}
 			}

@@ -56,22 +56,30 @@ int EventRecognizer::run() {
 							switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
 							{
 							case action_execute:
-								_action.execute(std::string(_profile["events"][i]["actions"][k]["command"]).c_str());
+								_action.execute(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
 								break;
 							case action_print:
-								_action.print(std::string(_profile["events"][i]["actions"][k]["text"]));
+								_action.print(std::string(_profile["events"][i]["actions"][k]["parameter"]));
 								break;
 							case action_bell:
 								_action.bell();
 								break;
 							case action_play_audio:
-								_action.play_audio(std::string(_profile["events"][i]["actions"][k]["file_path"]).c_str());
+								_action.play_audio(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
 								break;
 							case action_speak:
-								_action.speak(std::string(_profile["events"][i]["actions"][k]["text"]).c_str());
+								_action.speak(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
 								break;
 							case action_key:
-								_action.press_key((unsigned int)(_profile["events"][i]["actions"][k]["keycode"]));
+								try
+								{
+									_action.press_key(stoi(std::string(_profile["events"][i]["actions"][k]["parameter"])));
+								}
+								catch(const std::exception& e)
+								{
+									print_log("Invalid parameter for action \"key\": " + std::string(_profile["events"][i]["actions"][k]["parameter"]) + "\n");
+									std::cerr << e.what() << '\n';
+								}
 								break;
 							default:
 								print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");

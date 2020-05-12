@@ -89,6 +89,7 @@ void refresh_event_selected(void);
 void refresh_log(void);
 void refresh_monitor(void);
 void refresh_profile_combos(void);
+void save_config_profile(void);
 void reset_global_settings(void);
 void save_global_settings(void);
 void service_start(void);
@@ -165,6 +166,8 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_add_action, &QPushButton::clicked, add_action);
 	QObject::connect(ui_manager->pushButton_remove_action, &QPushButton::clicked, remove_selected_action);
 	QObject::connect(ui_manager->pushButton_open_config_folder, &QPushButton::clicked, open_config_folder);
+	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Save), &QPushButton::clicked, save_config_profile);
+	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Discard), &QPushButton::clicked, reload_profile);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -611,6 +614,12 @@ void reset_global_settings() {
 	discard_global_settings();
 }
 
+// Save profile to disk
+void save_config_profile() {
+	refresh_event_selected();
+	save_profile(selected_profile, ui_manager->comboBox_config_profile->currentText().toStdString());
+}
+
 // Take the settings from the global settings GUI, put them into the config, write changes to disk
 void save_global_settings() {
 	config["default_profile"] = ui_manager->lineEdit_default_profile->text().toStdString();
@@ -618,7 +627,6 @@ void save_global_settings() {
 	config["use_pulseaudio_flush"] = ui_manager->checkBox_pa_flush->isChecked();
 	save_config();
 }
-
 
 void service_start() {
 	system("nohup vokey_service &>/dev/null &");

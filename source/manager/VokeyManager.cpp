@@ -35,6 +35,7 @@
 #include <QString>
 #include <QTextDocument>
 #include <QTimer>
+#include <sstream>
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -74,8 +75,10 @@ void about_close(void);
 void discard_global_settings(void);
 json get_action(std::string id);
 json get_event(std::string id);
-void refresh_action_list(void);
-void refresh_action_selected(void);
+void refresh_action_list(std::string store_for_event_id = "");
+void refresh_action_list_dumb(void);
+void refresh_action_selected(std::string store_for_event_id = "");
+void refresh_action_selected_dumb(void);
 void refresh_event_list(void);
 void refresh_event_selected(void);
 void refresh_log(void);
@@ -150,7 +153,7 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
 	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), refresh_event_list);
 	QObject::connect(ui_manager->listWidget_event, &QListWidget::itemClicked, refresh_event_selected);
-	QObject::connect(ui_manager->listWidget_action, &QListWidget::itemClicked, refresh_action_selected);
+	QObject::connect(ui_manager->listWidget_action, &QListWidget::itemClicked, refresh_action_selected_dumb);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -191,6 +194,7 @@ void discard_global_settings() {
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
 
+// Get the action with the given id from the currently selected event of the currently selected profile. For read purposes only.
 json get_action(std::string id) {
 	json temp = NULL;
 
@@ -205,6 +209,7 @@ json get_action(std::string id) {
 	return temp;
 }
 
+// Get the event with the given id from the currently selected profile. For read purposes only.
 json get_event(std::string id) {
 	json temp = NULL;
 
@@ -218,7 +223,13 @@ json get_event(std::string id) {
 	return temp;
 }
 
-void refresh_action_list() {
+void refresh_action_list_dumb() {
+	// This helper function is necessary because QT's passed (although unused) parameters are incompatible with the proper function
+	refresh_action_list();
+}
+void refresh_action_list(std::string store_for_event_id) {
+	// store_for_event_id will be passed through to refresh_action_selected
+
 	// Clear action list
 	ui_manager->listWidget_action->clear();
 
@@ -231,11 +242,41 @@ void refresh_action_list() {
 	}
 
 	// Refresh the selected action
-	refresh_action_selected();
+	refresh_action_selected(store_for_event_id);
 }
 
-void refresh_action_selected() {
-	// Get action contents from event
+void refresh_action_selected_dumb() {
+	// This helper function is necessary because QT's passed (although unused) parameters are incompatible with the proper function
+	refresh_action_selected();
+}
+void refresh_action_selected(std::string store_for_event_id) {
+	// Allow overwriting of what event this action is supposed to be in
+	// (Necessary if the selected event is changed before the selected action is changed)
+	if (store_for_event_id == "")
+		store_for_event_id = selected_event;
+	
+	// Store previously selected action in profile
+	if (store_for_event_id != "" && selected_action != "") {
+		// Find correct action in profile
+		for (int i = 0; i < selected_profile["events"].size(); i++) {
+			if (selected_profile["events"][i]["id"] == store_for_event_id) {
+				// Found correct event by id
+				for (int j = 0; j < selected_profile["events"][i]["actions"].size(); j++) {
+					if (selected_profile["events"][i]["actions"][j]["id"] == selected_action) {
+						// Found correct action by id
+						// Now, store GUI data in this action:
+						selected_profile["events"][i]["actions"][j]["title"] = ui_manager->lineEdit_action_title->text().toStdString();
+						selected_profile["events"][i]["actions"][j]["type"] = ui_manager->comboBox_action_type->currentText().toStdString();
+						selected_profile["events"][i]["actions"][j]["parameter"] = ui_manager->lineEdit_action_parameter->text().toStdString();
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	// Get newly selected action contents from event
 	QListWidgetItem *current_item = ui_manager->listWidget_action->currentItem();
 	if (current_item != NULL) {
 		json action = get_action(current_item->text().toStdString());
@@ -284,11 +325,40 @@ void refresh_event_list() {
 	}
 
 	// Refresh the selected event
+	selected_action = "";
+	selected_event = "";
 	refresh_event_selected();
 }
 
 void refresh_event_selected() {
-	// Get event contents from profile
+	// Remember previously selected event id so that actions can be stored later, too
+	std::string previously_selected_event = selected_event;
+
+	// Store previously selected event in profile
+	if (selected_event != "") {
+		// Find correct event in profile
+		for (int i = 0; i < selected_profile["events"].size(); i++) {
+			if (selected_profile["events"][i]["id"] == selected_event) {
+				// Found correct event by id
+				// Now, store GUI data in this event:
+				selected_profile["events"][i]["title"] = ui_manager->lineEdit_event_title->text().toStdString();
+				selected_profile["events"][i]["description"] = ui_manager->lineEdit_event_description->text().toStdString();
+				// Commands have to be parsed: (newline-seperated)
+				selected_profile["events"][i]["commands"] = {};
+				std::istringstream commands;
+				std::string line;
+				commands.str(ui_manager->plainTextEdit_commands->toPlainText().toStdString());
+				for (int index = 0; std::getline(commands, line, '\n'); index++) {
+					if (line != "")
+						selected_profile["events"][i]["commands"][index] = line;
+				}
+
+				break;
+			}
+		}
+	}
+
+	// Get newly selected event contents from profile
 	QListWidgetItem *current_item = ui_manager->listWidget_event->currentItem();
 	if (current_item != NULL) {
 		json event = get_event(current_item->text().toStdString());
@@ -331,7 +401,7 @@ void refresh_event_selected() {
 	}
 
 	// Make sure the action list is also refreshed
-	refresh_action_list();
+	refresh_action_list(previously_selected_event);
 }
 
 // Read the log from disk and show it in the monitor tab

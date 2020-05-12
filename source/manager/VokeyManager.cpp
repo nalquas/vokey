@@ -64,16 +64,16 @@ QTimer *timer_monitor;
 // Variables
 
 json selected_profile = NULL;
-json selected_event = NULL;
-json selected_action = NULL;
+std::string selected_event = "";
+std::string selected_action = "";
 
 // Function headers
 
 void about_open(void);
 void about_close(void);
 void discard_global_settings(void);
-json get_action_from_event(std::string action_title);
-json get_event_from_profile(std::string event_title);
+json get_action(std::string id);
+json get_event(std::string id);
 void refresh_action_list(void);
 void refresh_action_selected(void);
 void refresh_event_list(void);
@@ -191,12 +191,13 @@ void discard_global_settings() {
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
 
-json get_action_from_event(std::string action_title) {
+json get_action(std::string id) {
 	json temp = NULL;
 
-	for (int i = 0; i < selected_event["actions"].size(); i++) {
-		if (std::string(selected_event["actions"][i]["title"]) == action_title) {
-			temp = selected_event["actions"][i];
+	json event = get_event(selected_event);
+	for (int i = 0; i < event["actions"].size(); i++) {
+		if (std::string(event["actions"][i]["id"]) == id) {
+			temp = event["actions"][i];
 			break;
 		}
 	}
@@ -204,11 +205,11 @@ json get_action_from_event(std::string action_title) {
 	return temp;
 }
 
-json get_event_from_profile(std::string event_title) {
+json get_event(std::string id) {
 	json temp = NULL;
 
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
-		if (std::string(selected_profile["events"][i]["title"]) == event_title) {
+		if (std::string(selected_profile["events"][i]["id"]) == id) {
 			temp = selected_profile["events"][i];
 			break;
 		}
@@ -221,10 +222,11 @@ void refresh_action_list() {
 	// Clear action list
 	ui_manager->listWidget_action->clear();
 
-	if (selected_event != NULL) {
+	json event = get_event(selected_event);
+	if (event != NULL) {
 		// Fill action list
-		for (int i = 0; i < selected_event["actions"].size(); i++) {
-			ui_manager->listWidget_action->addItem(QString::fromStdString(std::string(selected_event["actions"][i]["title"])));
+		for (int i = 0; i < event["actions"].size(); i++) {
+			ui_manager->listWidget_action->addItem(QString::fromStdString(std::string(event["actions"][i]["id"])));
 		}
 	}
 
@@ -236,13 +238,14 @@ void refresh_action_selected() {
 	// Get action contents from event
 	QListWidgetItem *current_item = ui_manager->listWidget_action->currentItem();
 	if (current_item != NULL) {
-		selected_action = get_action_from_event(current_item->text().toStdString());
+		json action = get_action(current_item->text().toStdString());
+		selected_action = action["id"];
 
 		// Overwrite GUI contents with selected action's contents
-		int type_index = ui_manager->comboBox_action_type->findText(QString::fromStdString(std::string(selected_action["type"])));
+		int type_index = ui_manager->comboBox_action_type->findText(QString::fromStdString(std::string(action["type"])));
 		if (type_index >= 0) {
 			ui_manager->comboBox_action_type->setCurrentIndex(type_index);
-			ui_manager->lineEdit_action_parameter->setText(QString::fromStdString(std::string(selected_action["parameter"])));
+			ui_manager->lineEdit_action_parameter->setText(QString::fromStdString(std::string(action["parameter"])));
 		}
 		else {
 			ui_manager->comboBox_action_type->setCurrentIndex(0);
@@ -260,7 +263,7 @@ void refresh_action_selected() {
 		ui_manager->lineEdit_action_parameter->setText(QString::fromStdString(std::string("")));
 		ui_manager->lineEdit_action_parameter->setEnabled(false);
 
-		selected_action = NULL;
+		selected_action = "";
 	}
 }
 
@@ -273,7 +276,7 @@ void refresh_event_list() {
 
 	// Fill event list
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
-		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["title"])));
+		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["id"])));
 	}
 
 	// Refresh the selected event
@@ -284,18 +287,19 @@ void refresh_event_selected() {
 	// Get event contents from profile
 	QListWidgetItem *current_item = ui_manager->listWidget_event->currentItem();
 	if (current_item != NULL) {
-		selected_event = get_event_from_profile(current_item->text().toStdString());
+		json event = get_event(current_item->text().toStdString());
+		selected_event = event["id"];
 		
 		// Overwrite GUI contents with selected event's contents
 
 		// Show title and description
-		ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(selected_event["title"])));
-		ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(selected_event["description"])));
+		ui_manager->lineEdit_event_title->setText(QString::fromStdString(std::string(event["title"])));
+		ui_manager->lineEdit_event_description->setText(QString::fromStdString(std::string(event["description"])));
 		
 		// Show commands
 		std::string temp_commands = "";
-		for (int i = 0; i < selected_event["commands"].size(); i++) {
-			temp_commands += std::string(selected_event["commands"][i]) + "\n";
+		for (int i = 0; i < event["commands"].size(); i++) {
+			temp_commands += std::string(event["commands"][i]) + "\n";
 		}
 		ui_manager->plainTextEdit_commands->setPlainText(QString::fromStdString(temp_commands));
 
@@ -319,7 +323,7 @@ void refresh_event_selected() {
 		ui_manager->pushButton_add_action->setEnabled(false);
 		ui_manager->pushButton_remove_action->setEnabled(false);
 
-		selected_event = NULL;
+		selected_event = "";
 	}
 
 	// Make sure the action list is also refreshed

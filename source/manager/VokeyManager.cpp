@@ -242,6 +242,7 @@ void refresh_action_selected() {
 		selected_action = action["id"];
 
 		// Overwrite GUI contents with selected action's contents
+		ui_manager->lineEdit_action_title->setText(QString::fromStdString(std::string(action["title"])));
 		int type_index = ui_manager->comboBox_action_type->findText(QString::fromStdString(std::string(action["type"])));
 		if (type_index >= 0) {
 			ui_manager->comboBox_action_type->setCurrentIndex(type_index);
@@ -253,11 +254,14 @@ void refresh_action_selected() {
 		}
 
 		// Enable GUI
+		ui_manager->lineEdit_action_title->setEnabled(true);
 		ui_manager->comboBox_action_type->setEnabled(true);
 		ui_manager->lineEdit_action_parameter->setEnabled(true);
 	}
 	else {
 		// Nothing selected, clear and disable GUI
+		ui_manager->lineEdit_action_title->setText(QString::fromStdString(std::string("")));
+		ui_manager->lineEdit_action_title->setEnabled(false);
 		ui_manager->comboBox_action_type->setCurrentIndex(0);
 		ui_manager->comboBox_action_type->setEnabled(false);
 		ui_manager->lineEdit_action_parameter->setText(QString::fromStdString(std::string("")));

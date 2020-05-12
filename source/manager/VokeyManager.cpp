@@ -95,6 +95,7 @@ void service_start(void);
 void service_kill(void);
 void service_reload_profile(void);
 void service_set_listening(void);
+void open_config_folder(void);
 void quit(void);
 
 // Function implementations
@@ -163,6 +164,7 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_remove_event, &QPushButton::clicked, remove_selected_event);
 	QObject::connect(ui_manager->pushButton_add_action, &QPushButton::clicked, add_action);
 	QObject::connect(ui_manager->pushButton_remove_action, &QPushButton::clicked, remove_selected_action);
+	QObject::connect(ui_manager->pushButton_open_config_folder, &QPushButton::clicked, open_config_folder);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -669,6 +671,11 @@ void service_set_listening() {
 		kill(pid, SIGUSR2);
 	}
 	// TODO If the service does not exist, start it
+}
+
+// Open the config folder
+void open_config_folder() {
+	system(("xdg-open " + config_location + " &").c_str());
 }
 
 // Close all windows, thus stopping vokey_manager

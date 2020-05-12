@@ -92,6 +92,15 @@ void quit(void);
 // Function implementations
 
 int main(int argc, char **argv) {
+	// Go through launch arguments
+	for (int i = 0; i < argc; i++) {
+		if (std::string(argv[i]) == "--version") {
+			// Print version and exit
+			std::cout << "vokey_manager " << VOKEY_VERSION << "\n";
+			return 0;
+		}
+	}
+
 	ensure_config_exists();
 	set_profile_directory(config_location + "/profiles");
 	ensure_default_profile_exists();

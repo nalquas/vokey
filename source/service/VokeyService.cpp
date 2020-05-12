@@ -113,6 +113,15 @@ int main(int argc, char const *argv[]) {
 	signal(SIGUSR1, ignore_signal);
 	signal(SIGUSR2, ignore_signal);
 
+	// Go through launch arguments
+	for (int i = 0; i < argc; i++) {
+		if (std::string(argv[i]) == "--version") {
+			// Print version and exit
+			std::cout << "vokey_service " << VOKEY_VERSION << "\n";
+			return 0;
+		}
+	}
+
 	// Make sure we are the only instance
 	if (already_running()) {
 		std::cout << "There already is an instance of vokey_service running. Exiting...\n";

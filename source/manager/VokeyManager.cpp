@@ -72,6 +72,11 @@ std::string selected_action = "";
 
 void about_open(void);
 void about_close(void);
+void add_event(void);
+void remove_selected_event(void);
+void add_action(void);
+void remove_selected_action(void);
+void reload_profile(void);
 void discard_global_settings(void);
 json get_action(std::string id);
 json get_event(std::string id);
@@ -151,9 +156,13 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_monitor_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
 	QObject::connect(ui_manager->pushButton_config_profile_refresh, &QPushButton::clicked, refresh_profile_combos);
 	QObject::connect(ui_manager->comboBox_monitor_profile, QOverload<int>::of(&QComboBox::activated), service_reload_profile);
-	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), refresh_event_list);
+	QObject::connect(ui_manager->comboBox_config_profile, QOverload<int>::of(&QComboBox::activated), reload_profile);
 	QObject::connect(ui_manager->listWidget_event, &QListWidget::itemClicked, refresh_event_selected);
 	QObject::connect(ui_manager->listWidget_action, &QListWidget::itemClicked, refresh_action_selected_dumb);
+	QObject::connect(ui_manager->pushButton_add_event, &QPushButton::clicked, add_event);
+	QObject::connect(ui_manager->pushButton_remove_event, &QPushButton::clicked, remove_selected_event);
+	QObject::connect(ui_manager->pushButton_add_action, &QPushButton::clicked, add_action);
+	QObject::connect(ui_manager->pushButton_remove_action, &QPushButton::clicked, remove_selected_action);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -167,7 +176,7 @@ int main(int argc, char **argv) {
 	refresh_monitor();
 
 	// Initialize config tab (used to edit profiles and events)
-	refresh_event_list();
+	reload_profile();
 
 	// Show application to user
 	manager->show();
@@ -182,6 +191,76 @@ void about_open() {
 // Close the about dialog
 void about_close() {
 	about->close();
+}
+
+void add_event() {
+	// First, refresh the selected event so that changes are stored in profile
+	refresh_event_selected();
+
+	// Second, add an event to the list
+	selected_profile["events"].push_back(generate_default_event());
+
+	// Thirdly, refresh the event list to show the new event
+	refresh_event_list();
+}
+
+void remove_selected_event() {
+	// Remove the selected event from the list
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			selected_profile["events"].erase(i);
+
+			// Refresh the event list to show the event is gone
+			refresh_event_list();
+			break;
+		}
+	}
+}
+
+void add_action() {
+	// First, refresh the selected action so that changes are stored in profile
+	refresh_action_selected();
+
+	// Second, add an action to the list
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		// Find the correct event
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Add action
+			selected_profile["events"][i]["actions"].push_back(generate_default_action());
+			break;
+		}
+	}
+
+	// Thirdly, refresh the action list to show the new action
+	refresh_action_list();
+}
+
+void remove_selected_action() {
+	// Remove the selected action from the list
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		// Find the correct event
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Find the correct action
+			for (int j = 0; j < selected_profile["events"][i]["actions"].size(); j++) {
+				if (selected_profile["events"][i]["actions"][j]["id"] == selected_action) {
+					// Remove action
+					selected_profile["events"][i]["actions"].erase(j);
+
+					// Refresh the action list to show the action is gone
+					refresh_action_list();
+					break;
+				}
+			}
+			break;
+		}
+	}
+}
+
+void reload_profile() {
+	// Load selected profile from disk
+	selected_profile = ensure_profile_compatibility(load_profile(ui_manager->comboBox_config_profile->currentText().toStdString()));
+
+	refresh_event_list();
 }
 
 // Reset what's shown in the global settings GUI to what is currently saved in the config
@@ -313,9 +392,6 @@ void refresh_action_selected(std::string store_for_event_id) {
 }
 
 void refresh_event_list() {
-	// Load selected profile from disk
-	selected_profile = ensure_profile_compatibility(load_profile(ui_manager->comboBox_config_profile->currentText().toStdString()));
-
 	// Clear event list
 	ui_manager->listWidget_event->clear();
 
@@ -496,6 +572,8 @@ void refresh_monitor() {
 }
 
 void refresh_profile_combos() {
+	refresh_profile_list();
+
 	// Save current selection to restore later
 	std::string selection_monitor = ui_manager->comboBox_monitor_profile->currentText().toStdString();
 	std::string selection_config = ui_manager->comboBox_config_profile->currentText().toStdString();
@@ -520,6 +598,7 @@ void refresh_profile_combos() {
 		ui_manager->comboBox_config_profile->setCurrentIndex(selection_config_index);
 	
 	// Refresh event list
+	reload_profile();
 	refresh_event_list();
 }
 

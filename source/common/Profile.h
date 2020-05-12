@@ -18,7 +18,7 @@
 #ifndef Profile_h
 #define Profile_h
 
-#define VOKEY_PROFILE_VERSION 2
+#define VOKEY_PROFILE_VERSION 3
 
 #include <filesystem>
 #include <fstream>
@@ -33,11 +33,16 @@ using json = nlohmann::json;
 
 inline std::string profile_location = "";
 inline std::vector<std::string> profile_list;
+inline unsigned long unique_identifier_iterator = 0;
 
 // Header
 
 void ensure_default_profile_exists(void);
+json ensure_profile_compatibility(json profile);
+std::string generate_unique_identifier(void);
 json generate_default_profile(void);
+json generate_default_event(void);
+json generate_default_action(void);
 json load_profile(std::string profile_filename);
 void refresh_profile_list(void);
 void save_profile(json profile, std::string profile_filename);
@@ -58,29 +63,67 @@ inline void ensure_default_profile_exists(void) {
 	}
 }
 
+// Ensure profile compatibility by going through every iteration of Vokey's profile standard
+inline json ensure_profile_compatibility(json profile) {
+	if (profile["version"] <= 2) {
+		// Version 3 introduced unique identifier ids
+		profile["id"] = generate_unique_identifier();
+		for (int i = 0; i < profile["events"].size(); i++) {
+			profile["events"][i]["id"] = generate_unique_identifier();
+			for (int j = 0; j < profile["events"][i]["actions"].size(); j++) {
+				profile["events"][i]["actions"][j]["id"] = generate_unique_identifier();
+			}
+		}
+		profile["version"] = 3;
+	}
+
+	// Return the updated profile
+	return profile;
+}
+
+// Generate a unique identifier for differentiating between profiles/events/actions
+inline std::string generate_unique_identifier(void) {
+	return std::to_string((unsigned long)time(NULL)) + "-" + std::to_string(unique_identifier_iterator++);
+}
+
 // Returns a json object containing default profile contents
 inline json generate_default_profile() {
 	json profile = {
 		{"version", VOKEY_PROFILE_VERSION},
+		{"id", generate_unique_identifier()},
 		{"name", "Default Profile"},
 		{"description", "This is the default profile"},
 		{"events", {
-			{
-				{"title", "Example Event"},
-				{"description", "This is an example event."},
-				{"commands", {"example", "test"}},
-				{"actions", {
-					{
-						{"title", "say example event"},
-						{"type", "speak"},
-						{"parameter", "You have triggered the example event. Congratulations, it is working!"}
-					}
-				}}
-			}
+			generate_default_event()
 		}}
 	};
 
 	return profile;
+}
+
+// Returns a json object containing default event contents
+inline json generate_default_event() {
+	json event = {
+		{"id", generate_unique_identifier()},
+		{"title", "Default Event"},
+		{"description", "This is an automatically-generated default event."},
+		{"commands", {"example", "test"}},
+		{"actions", {
+			generate_default_action()
+		}}
+	};
+	return event;
+}
+
+// Returns a json object containing default action contents
+inline json generate_default_action() {
+	json action = {
+		{"id", generate_unique_identifier()},
+		{"title", "Default Action"},
+		{"type", "speak"},
+		{"parameter", "You have triggered the default action."}
+	};
+	return action;
 }
 
 // Returns a json object of the profile from the specified filename

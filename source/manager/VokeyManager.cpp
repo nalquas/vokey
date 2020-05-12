@@ -257,7 +257,7 @@ void refresh_action_selected() {
 
 void refresh_event_list() {
 	// Load selected profile from disk
-	selected_profile = load_profile(ui_manager->comboBox_config_profile->currentText().toStdString());
+	selected_profile = ensure_profile_compatibility(load_profile(ui_manager->comboBox_config_profile->currentText().toStdString()));
 
 	// Clear event list
 	ui_manager->listWidget_event->clear();

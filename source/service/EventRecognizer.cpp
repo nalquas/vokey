@@ -34,12 +34,17 @@ int EventRecognizer::run() {
 			_profile = ensure_profile_compatibility(load_profile(_reload_profile_file_path));
 
 			// Create dictionary for the profile (for better accuracy)
-			// Make a list of all commands in this profile
+			// Make a list of all words used in commands in this profile
 			std::vector<std::string> commands = {};
 			for (int i = 0; i < _profile["events"].size(); i++) {
 				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
-					if (_profile["events"][i]["commands"][j] != "")
-						commands.push_back(_profile["events"][i]["commands"][j]);
+					// Handle mutli-word commands by seperating them first
+					std::istringstream command;
+					command.str(_profile["events"][i]["commands"][j]);
+					for (std::string word; std::getline(command, word, ' '); ) {
+						if (word != "")
+							commands.push_back(word);
+					}
 				}
 			}
 			// Load default dictionary from disk

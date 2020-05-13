@@ -563,18 +563,8 @@
                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type of the selected action&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="currentText">
-                 <string>execute</string>
+                 <string>bell</string>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>execute</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>print</string>
-                 </property>
-                </item>
                 <item>
                  <property name="text">
                   <string>bell</string>
@@ -582,7 +572,22 @@
                 </item>
                 <item>
                  <property name="text">
+                  <string>execute</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>key</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
                   <string>play_audio</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>print</string>
                  </property>
                 </item>
                 <item>
@@ -650,8 +655,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>988</width>
-             <height>467</height>
+             <width>510</width>
+             <height>100</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">

@@ -37,10 +37,24 @@ VoiceRecognizer::VoiceRecognizer() {
 	);
 
 	// Pocketsphinx
+	reload();
+}
+
+void VoiceRecognizer::reload() {
+	// Discard old pocketsphinx instance, if there is one
+	if (_ps != NULL) ps_free(_ps);
+	if (_ps_config != NULL) cmd_ln_free_r(_ps_config);
+
+	// Initialize new pocketsphinx instance
+	std::string dictionary_path = VOKEY_TMP_DICT;
+	if (stat(dictionary_path.c_str(), &st) == -1) {
+		// If there is no custom dictionary, fall back to the default dictionary to prevent segfaults
+		dictionary_path = MODELDIR "/en-us/cmudict-en-us.dict";
+	}
 	_ps_config = cmd_ln_init(NULL, ps_args(), TRUE,
 	"-hmm", MODELDIR "/en-us/en-us",
 	"-lm", MODELDIR "/en-us/en-us.lm.bin",
-	"-dict", MODELDIR "/en-us/cmudict-en-us.dict",
+	"-dict", dictionary_path.c_str(),
 	"-logfn", "/dev/null",
 	NULL);
 	if (_ps_config == NULL) {

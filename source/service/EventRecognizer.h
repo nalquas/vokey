@@ -22,12 +22,17 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 #include <nlohmann/json.hpp>
 
 #include "../common/Communication.h"
 #include "../common/Profile.h"
 #include "Action.h"
 #include "VoiceRecognizer.h"
+
+#define IGNORE_SCORE_TRESHOLD -10000
 
 using json = nlohmann::json;
 

@@ -29,8 +29,51 @@ int EventRecognizer::run() {
 	for (;;) {
 		// Handle reload requests
 		if (_reload_requested) {
+			// Load requested profile
 			print_log("\n[INFO] Loading profile " + _reload_profile_file_path + "\n");
 			_profile = ensure_profile_compatibility(load_profile(_reload_profile_file_path));
+
+			// Create dictionary for the profile (for better accuracy)
+			// Make a list of all commands in this profile
+			std::vector<std::string> commands = {};
+			for (int i = 0; i < _profile["events"].size(); i++) {
+				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
+					if (_profile["events"][i]["commands"][j] != "")
+						commands.push_back(_profile["events"][i]["commands"][j]);
+				}
+			}
+			// Load default dictionary from disk
+			std::string temp = "";
+			std::ifstream f(MODELDIR "/en-us/cmudict-en-us.dict");
+			temp.assign( (std::istreambuf_iterator<char>(f) ), (std::istreambuf_iterator<char>()));
+			f.close();
+			std::istringstream dictionary;
+			dictionary.str(temp);
+			// Iterate over each line of the dictionary
+			std::string line;
+			std::string new_dictionary = "";
+			for (int i = 0; std::getline(dictionary, line, '\n'); i++) {
+				// Check if the line contains any one of the commands
+				for (int j = 0; j < commands.size(); j++) {
+					const char *line_cstr = line.c_str();
+					if (line_cstr==strstr(line_cstr, (commands[j]+" ").c_str()) || line_cstr==strstr(line_cstr, (commands[j]+"(").c_str())) {
+						// Add the line to the new dictionary
+						new_dictionary += line + "\n";
+						// Don't check this line again
+						break;
+					}
+				}
+			}
+			// Write new dictionary to disk
+			std::ofstream ofs;
+			ofs.open(VOKEY_TMP_DICT);
+			ofs << new_dictionary;
+			ofs.close();
+
+			// Make VoiceRecognizer use the new dictionary
+			_vr.reload();
+
+			// Mark reload as finished
 			_reload_requested = false;
 		}
 
@@ -40,58 +83,64 @@ int EventRecognizer::run() {
 			if (_vr.process_microphone(true) != 0) return -1;
 
 			// Text handling
-			print_log("[INFO] Text: " + _vr.get_text() + "\n");
+			print_log("[INFO] Text: " + _vr.get_text() + " (Score: " + std::to_string(_vr.get_score()) + ")\n");
 
-			// Check for all possible events
-			bool any_event_activated = false;
-			for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
-				// Check for all possible commands
-				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
-					if (strstr(_vr.get_text().c_str(), std::string(_profile["events"][i]["commands"][j]).c_str())) {
-						// Text matched one of the commands of this event
-						print_log("[EVENT] Triggered " + std::string(_profile["events"][i]["title"]) + "\n");
-						
-						// Activate all specified actions
-						for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
-							switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
-							{
-							case action_execute:
-								_action.execute(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-								break;
-							case action_print:
-								_action.print(std::string(_profile["events"][i]["actions"][k]["parameter"]));
-								break;
-							case action_bell:
-								_action.bell();
-								break;
-							case action_play_audio:
-								_action.play_audio(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-								break;
-							case action_speak:
-								_action.speak(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-								break;
-							case action_key:
-								try
+			// Only proceed if pocketsphinx is confident enough that the text is correct
+			if (_vr.get_score() > IGNORE_SCORE_TRESHOLD) {
+				// Check for all possible events
+				bool any_event_activated = false;
+				for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
+					// Check for all possible commands
+					for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
+						if (strstr(_vr.get_text().c_str(), std::string(_profile["events"][i]["commands"][j]).c_str())) {
+							// Text matched one of the commands of this event
+							print_log("[EVENT] Triggered " + std::string(_profile["events"][i]["title"]) + "\n");
+							
+							// Activate all specified actions
+							for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
+								switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
 								{
-									_action.press_key(stoi(std::string(_profile["events"][i]["actions"][k]["parameter"])));
+								case action_execute:
+									_action.execute(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+									break;
+								case action_print:
+									_action.print(std::string(_profile["events"][i]["actions"][k]["parameter"]));
+									break;
+								case action_bell:
+									_action.bell();
+									break;
+								case action_play_audio:
+									_action.play_audio(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+									break;
+								case action_speak:
+									_action.speak(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+									break;
+								case action_key:
+									try
+									{
+										_action.press_key(stoi(std::string(_profile["events"][i]["actions"][k]["parameter"])));
+									}
+									catch(const std::exception& e)
+									{
+										print_log("Invalid parameter for action \"key\": " + std::string(_profile["events"][i]["actions"][k]["parameter"]) + "\n");
+										std::cerr << e.what() << '\n';
+									}
+									break;
+								default:
+									print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
+									break;
 								}
-								catch(const std::exception& e)
-								{
-									print_log("Invalid parameter for action \"key\": " + std::string(_profile["events"][i]["actions"][k]["parameter"]) + "\n");
-									std::cerr << e.what() << '\n';
-								}
-								break;
-							default:
-								print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
-								break;
 							}
+							
+							// Don't check for any other accepted commands of this event
+							any_event_activated = true;
+							break;
 						}
-						
-						// Don't check for any other accepted commands of this event
-						any_event_activated = true;
-						break;
 					}
 				}
+			}
+			else {
+				print_log("[INFO] Score too low, ignoring...\n");
 			}
 		}
 		else {

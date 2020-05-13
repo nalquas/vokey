@@ -19,6 +19,7 @@
 #define Communication_h
 
 #define VOKEY_TMP "/tmp/vokey"
+#define VOKEY_TMP_DICT "/tmp/vokey/words.dict"
 #define VOKEY_TMP_LISTENING "/tmp/vokey/listening.bool"
 #define VOKEY_TMP_LOG "/tmp/vokey/service.log"
 #define VOKEY_TMP_PID "/tmp/vokey/service.pid"

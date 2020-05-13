@@ -36,6 +36,7 @@ public:
 	std::string get_text(void);
 	int get_score(void);
 	void request_finish(void);
+	void reload(void);
 private:
 	bool _finish_requested;
 	// Results:

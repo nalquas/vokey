@@ -90,6 +90,8 @@ void refresh_log(void);
 void refresh_monitor(void);
 void refresh_profile_combos(void);
 void save_config_profile(void);
+void create_new_profile(void);
+void toggle_add_profile_dialog(void);
 void reset_global_settings(void);
 void save_global_settings(void);
 void service_start(void);
@@ -128,6 +130,7 @@ int main(int argc, char **argv) {
 	ui_manager = new Ui_VokeyManager;
 	ui_manager->setupUi(manager);
 	refresh_profile_combos();
+	ui_manager->horizontalWidget_add_profile->setVisible(false);
 
 	// Get currently running profile and show in profile selection comboBox
 	if (get_service_pid() >= 0 && stat(VOKEY_TMP_PROFILE, &st) != -1) {
@@ -168,6 +171,8 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->pushButton_open_config_folder, &QPushButton::clicked, open_config_folder);
 	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Save), &QPushButton::clicked, save_config_profile);
 	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Discard), &QPushButton::clicked, reload_profile);
+	QObject::connect(ui_manager->pushButton_add_profile, &QPushButton::clicked, toggle_add_profile_dialog);
+	QObject::connect(ui_manager->pushButton_add_profile_confirm, &QPushButton::clicked, create_new_profile);
 
 	// Connections: About Vokey
 	QObject::connect(ui_about->buttonBox, &QDialogButtonBox::rejected, about_close);
@@ -626,6 +631,28 @@ void save_global_settings() {
 	config["listening_on_startup"] = ui_manager->checkBox_global_listening->isChecked();
 	config["use_pulseaudio_flush"] = ui_manager->checkBox_pa_flush->isChecked();
 	save_config();
+}
+
+// Create a new profile and write it do disk
+void create_new_profile() {
+	// Save generated default profile to the specified filename from lineEdit_add_profile
+	save_profile(generate_default_profile(), ui_manager->lineEdit_add_profile->text().toStdString());
+
+	// Refresh profile list
+	refresh_profile_combos();
+
+	// Hide dialog again
+	toggle_add_profile_dialog();
+}
+
+// Show a dialog allowing you to create new profiles
+void toggle_add_profile_dialog() {
+	// Toggle add profile widget visibility
+	ui_manager->horizontalWidget_add_profile->setVisible(!ui_manager->horizontalWidget_add_profile->isVisible());
+	// If it is now visible, insert an automatically generated profile name
+	if (ui_manager->horizontalWidget_add_profile->isVisible()) {
+		ui_manager->lineEdit_add_profile->setText(QString::fromStdString("profile-" + generate_unique_identifier() + ".json"));
+	}
 }
 
 void service_start() {

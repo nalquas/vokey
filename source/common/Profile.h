@@ -91,8 +91,6 @@ inline json generate_default_profile() {
 	json profile = {
 		{"version", VOKEY_PROFILE_VERSION},
 		{"id", generate_unique_identifier()},
-		{"name", "Default Profile"},
-		{"description", "This is the default profile"},
 		{"events", {
 			generate_default_event()
 		}}

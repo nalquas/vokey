@@ -14,7 +14,7 @@ VOKEY_VERSION = `cat version`
 all: vokey_service vokey_manager
 
 vokey_service: source/service/VokeyService.cpp source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp source/service/Candy.h source/common/Common.h source/common/Communication.h source/common/Config.h source/common/Profile.h version
-	$(COMPILER) $(C_STD) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" -DVOKEY_VERSION=\"$(VOKEY_VERSION)\" source/service/VokeyService.cpp  source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service
+	$(COMPILER) $(C_STD) $(LINKERFLAGS_SERVICE) -DMODELDIR=\"$(POCKETSPHINX_MODELDIR)\" -DVOKEY_VERSION=\"$(VOKEY_VERSION)\" source/service/VokeyService.cpp source/service/Action.cpp source/service/EventRecognizer.cpp source/service/VoiceRecognizer.cpp -o vokey_service
 	chmod +x vokey_service
 
 vokey_manager: source/manager/VokeyManager.cpp source/manager/ui/manager.h source/manager/ui/about.h source/common/Common.h source/common/Communication.h source/common/Config.h source/common/Profile.h version

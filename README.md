@@ -25,15 +25,13 @@ You need to have the following libraries installed to your system to compile Vok
 
 ```
 # On Ubuntu (20.04) systems, install the necessary dev packages and dependencies using:
-sudo apt install build-essential qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libsphinxbase3 libpocketsphinx-dev alsa-utils festival
-# You'll still need to install "JSON for Modern C++" manually
+sudo apt install build-essential qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libsphinxbase3 libpocketsphinx-dev alsa-utils festival nlohmann-json-dev
 
 # On Arch-based systems, install the necessary dev packages and dependencies using:
-sudo pacman -Syu base-devel qt5-base pulseaudio alsa-utils festival festival-english
+sudo pacman -Syu base-devel qt5-base pulseaudio alsa-utils festival festival-english nlohmann-json
 # Pocketsphinx is not in the Arch repositories, you'll have to get it from the AUR:
 # https://aur.archlinux.org/packages/pocketsphinx
 # https://aur.archlinux.org/packages/sphinxbase/
-# You'll still need to install "JSON for Modern C++" manually
 ```
 
 To compile the project, simply execute:
@@ -59,7 +57,7 @@ sudo pacman -Syu qt5-base pulseaudio alsa-utils festival festival-english
 To install Vokey on your system, simply execute:
 
 ```
-bash ./linux_install.sh
+make install
 ```
 
 ## Usage

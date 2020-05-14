@@ -1,6 +1,8 @@
 # Usage:
-# make       - Build Vokey
-# make clean - Remove compiled binaries
+# make           - Build Vokey
+# make clean     - Remove compiled binaries
+# make install   - Install compiled binaries to your system
+# make uninstall - Remove compiled binaries from your system
 
 .PHONY: all clean
 
@@ -32,3 +34,15 @@ clean:
 	if test -f "vokey_manager"; then rm vokey_manager; fi
 	if test -f "source/manager/ui/manager.h"; then rm source/manager/ui/manager.h; fi
 	if test -f "source/manager/ui/about.h"; then rm source/manager/ui/about.h; fi
+
+install:
+	install -Dm755 vokey_service $(DESTDIR)/usr/bin/vokey_service
+	install -Dm755 vokey_manager $(DESTDIR)/usr/bin/vokey_manager
+	install -Dm644 "desktop/Vokey Manager.desktop" "$(DESTDIR)/usr/share/applications/Vokey Manager.desktop"
+	install -Dm644 desktop/vokey.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/vokey.svg
+
+uninstall:
+	if test -f "/usr/bin/vokey_service"; then rm /usr/bin/vokey_service; fi
+	if test -f "/usr/bin/vokey_manager"; then rm /usr/bin/vokey_manager; fi
+	if test -f "/usr/share/applications/Vokey Manager.desktop"; then rm "/usr/share/applications/Vokey Manager.desktop"; fi
+	if test -f "/usr/share/icons/hicolor/scalable/apps/vokey.svg"; then rm /usr/share/icons/hicolor/scalable/apps/vokey.svg; fi

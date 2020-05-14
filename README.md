@@ -41,7 +41,14 @@ make
 ```
 
 ## Installation
-Vokey requires several dependencies to be installed for it to work:
+### AUR
+You can get Vokey from the AUR:
+https://aur.archlinux.org/packages/vokey-git/
+
+### make
+If you prefer a manual install, you can use make.
+
+You will have to install the necessary dependencies yourself:
 
 ```
 # On Ubuntu (20.04) systems, install the dependencies using:

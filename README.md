@@ -15,6 +15,49 @@ The planned use case is gaming - Imagine flying a spaceship and just being able 
 
 Vokey is intended for use on Linux systems with Pulseaudio.
 
+## Usage
+Vokey is split into two sub-programs.
+
+The main program is a background service reacting to your voice in a manner described by the selected profile:
+
+```
+vokey_service
+```
+
+The second program is a GUI-based manager used to configure the service.
+You *could* use the service without this if you prefer editing .json files manually.
+
+```
+vokey_manager
+```
+
+## Installation
+### AUR
+You can get Vokey from the AUR:
+https://aur.archlinux.org/packages/vokey-git/
+
+### make
+If you prefer a manual install, you can use make. You can get pre-compiled binaries on the [release page](https://github.com/nalquas/vokey/releases).
+
+You will have to install the necessary dependencies yourself:
+
+```
+# On Ubuntu (20.04) systems, install the dependencies using:
+sudo apt install alsa-utils festival pocketsphinx pocketsphinx-en-us
+
+# On Arch-based systems, install the dependencies using:
+sudo pacman -Syu qt5-base pulseaudio alsa-utils festival festival-english
+# Pocketsphinx is not in the Arch repositories, you'll have to get it from the AUR:
+# https://aur.archlinux.org/packages/pocketsphinx
+# https://aur.archlinux.org/packages/sphinxbase/
+```
+
+Assuming you have the compiled binaries, you can install Vokey on your system by executing:
+
+```
+make install
+```
+
 ## Compilation
 You need to have the following libraries installed to your system to compile Vokey:
 
@@ -38,47 +81,4 @@ To compile the project, simply execute:
 
 ```
 make
-```
-
-## Installation
-### AUR
-You can get Vokey from the AUR:
-https://aur.archlinux.org/packages/vokey-git/
-
-### make
-If you prefer a manual install, you can use make.
-
-You will have to install the necessary dependencies yourself:
-
-```
-# On Ubuntu (20.04) systems, install the dependencies using:
-sudo apt install alsa-utils festival pocketsphinx pocketsphinx-en-us
-
-# On Arch-based systems, install the dependencies using:
-sudo pacman -Syu qt5-base pulseaudio alsa-utils festival festival-english
-# Pocketsphinx is not in the Arch repositories, you'll have to get it from the AUR:
-# https://aur.archlinux.org/packages/pocketsphinx
-# https://aur.archlinux.org/packages/sphinxbase/
-```
-
-To install Vokey on your system, simply execute:
-
-```
-make install
-```
-
-## Usage
-Vokey is split into two sub-programs.
-
-The main program is a background service reacting to your voice in a manner described by the selected profile:
-
-```
-vokey_service
-```
-
-The second program is a GUI-based manager used to configure the service.
-You *could* use the service without this if you prefer editing .json files manually.
-
-```
-vokey_manager
 ```

@@ -378,6 +378,16 @@ void refresh_action_selected(std::string store_for_event_id) {
 				break;
 			}
 		}
+
+		// Now, make sure the title of the selected action is shown correctly
+		for (int i = 0; i < ids_actions.size(); i++) {
+			if (ids_actions[i] == selected_action) {
+				// Found correct index according to id list.
+				// Use that index to overwrite the title in the GUI list
+				ui_manager->listWidget_action->item(i)->setText(QString::fromStdString(ui_manager->lineEdit_action_title->text().toStdString()));
+				break;
+			}
+		}
 	}
 
 	// Get newly selected action contents from event
@@ -456,6 +466,16 @@ void refresh_event_selected() {
 						selected_profile["events"][i]["commands"][index] = line;
 				}
 
+				break;
+			}
+		}
+
+		// Now, make sure the title of the selected event is shown correctly
+		for (int i = 0; i < ids_events.size(); i++) {
+			if (ids_events[i] == selected_event) {
+				// Found correct index according to id list.
+				// Use that index to overwrite the title in the GUI list
+				ui_manager->listWidget_event->item(i)->setText(QString::fromStdString(ui_manager->lineEdit_event_title->text().toStdString()));
 				break;
 			}
 		}

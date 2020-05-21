@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
+    <width>600</width>
     <height>300</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>625</width>
+    <width>600</width>
     <height>300</height>
    </size>
   </property>
@@ -20,7 +20,8 @@
    <string>About Vokey</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="vokey"/>
+   <iconset theme="vokey">
+    <normaloff>.</normaloff>.</iconset>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>
@@ -56,7 +57,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A voice-based hotkey application&lt;/p&gt;&lt;p&gt;Copyright (C) 2020 Nalquas&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/nalquas/vokey&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;https://github.com/nalquas/vokey&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Licensed under the GNU GENERAL PUBLIC LICENSE Version 3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A voice-based hotkey application&lt;/p&gt;&lt;p&gt;Copyright (C) 2020 Nalquas&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/nalquas/vokey&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#2980b9;&quot;&gt;https://github.com/nalquas/vokey&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Licensed under the GNU GENERAL PUBLIC LICENSE Version 3.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="textFormat">
           <enum>Qt::RichText</enum>

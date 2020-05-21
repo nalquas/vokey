@@ -39,6 +39,7 @@
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <vector>
 
 // Vokey includes
 
@@ -67,6 +68,8 @@ QTimer *timer_monitor;
 json selected_profile = NULL;
 std::string selected_event = "";
 std::string selected_action = "";
+std::vector<std::string> ids_events = {}; // Store the IDs of events at the correct index (so we don't have to store them in the GUI list)
+std::vector<std::string> ids_actions = {}; // Store the IDs of actions at the correct index (so we don't have to store them in the GUI list)
 
 // Function headers
 
@@ -80,6 +83,8 @@ void reload_profile(void);
 void discard_global_settings(void);
 json get_action(std::string id);
 json get_event(std::string id);
+std::string get_action_id(int index);
+std::string get_event_id(int index);
 void refresh_action_list(std::string store_for_event_id = "");
 void refresh_action_list_dumb(void);
 void refresh_action_selected(std::string store_for_event_id = "");
@@ -312,6 +317,14 @@ json get_event(std::string id) {
 	return temp;
 }
 
+std::string get_action_id(int index) {
+	return ids_actions[index];
+}
+
+std::string get_event_id(int index) {
+	return ids_events[index];
+}
+
 void refresh_action_list_dumb() {
 	// This helper function is necessary because QT's passed (although unused) parameters are incompatible with the proper function
 	refresh_action_list();
@@ -321,12 +334,14 @@ void refresh_action_list(std::string store_for_event_id) {
 
 	// Clear action list
 	ui_manager->listWidget_action->clear();
+	ids_actions.clear();
 
 	json event = get_event(selected_event);
 	if (event != NULL) {
 		// Fill action list
 		for (int i = 0; i < event["actions"].size(); i++) {
-			ui_manager->listWidget_action->addItem(QString::fromStdString(std::string(event["actions"][i]["id"])));
+			ui_manager->listWidget_action->addItem(QString::fromStdString(std::string(event["actions"][i]["title"])));
+			ids_actions.push_back(std::string(event["actions"][i]["id"]));
 		}
 	}
 
@@ -366,9 +381,9 @@ void refresh_action_selected(std::string store_for_event_id) {
 	}
 
 	// Get newly selected action contents from event
-	QListWidgetItem *current_item = ui_manager->listWidget_action->currentItem();
-	if (current_item != NULL) {
-		json action = get_action(current_item->text().toStdString());
+	int current_row = ui_manager->listWidget_action->currentRow();
+	if (current_row >= 0) {
+		json action = get_action(get_action_id(current_row));
 		selected_action = action["id"];
 
 		// Overwrite GUI contents with selected action's contents
@@ -404,10 +419,12 @@ void refresh_action_selected(std::string store_for_event_id) {
 void refresh_event_list() {
 	// Clear event list
 	ui_manager->listWidget_event->clear();
+	ids_events.clear();
 
 	// Fill event list
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
-		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["id"])));
+		ui_manager->listWidget_event->addItem(QString::fromStdString(std::string(selected_profile["events"][i]["title"])));
+		ids_events.push_back(std::string(selected_profile["events"][i]["id"]));
 	}
 
 	// Refresh the selected event
@@ -445,9 +462,9 @@ void refresh_event_selected() {
 	}
 
 	// Get newly selected event contents from profile
-	QListWidgetItem *current_item = ui_manager->listWidget_event->currentItem();
-	if (current_item != NULL) {
-		json event = get_event(current_item->text().toStdString());
+	int current_row = ui_manager->listWidget_event->currentRow();
+	if (current_row >= 0) {
+		json event = get_event(get_event_id(current_row));
 		selected_event = event["id"];
 		
 		// Overwrite GUI contents with selected event's contents

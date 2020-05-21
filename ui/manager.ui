@@ -300,7 +300,7 @@
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;List of events of this profile&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="sortingEnabled">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
              </widget>
             </item>

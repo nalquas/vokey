@@ -108,7 +108,7 @@ int main(int argc, char **argv) {
 	for (int i = 0; i < argc; i++) {
 		if (std::string(argv[i]) == "--version") {
 			// Print version and exit
-			std::cout << "vokey_manager " << VOKEY_VERSION << "\n";
+			std::cout << "vokey_manager " << VOKEY_VERSION << " (built on " << BUILD_DATE << ")\n";
 			return 0;
 		}
 	}
@@ -146,7 +146,7 @@ int main(int argc, char **argv) {
 	about = new QDialog;
 	ui_about = new Ui_VokeyAbout;
 	ui_about->setupUi(about);
-	ui_about->label_version->setText(QString::fromStdString("Version: " + std::string(VOKEY_VERSION)));
+	ui_about->label_version->setText(QString::fromStdString("Version: " + std::string(VOKEY_VERSION) + " (built on " + std::string(BUILD_DATE) + ")"));
 
 	// Connections: VokeyManager
 	QObject::connect(ui_manager->actionQuit, &QAction::triggered, quit);

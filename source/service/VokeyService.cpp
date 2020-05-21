@@ -117,7 +117,7 @@ int main(int argc, char const *argv[]) {
 	for (int i = 0; i < argc; i++) {
 		if (std::string(argv[i]) == "--version") {
 			// Print version and exit
-			std::cout << "vokey_service " << VOKEY_VERSION << "\n";
+			std::cout << "vokey_service " << VOKEY_VERSION << " (built on " << BUILD_DATE << ")\n";
 			return 0;
 		}
 	}

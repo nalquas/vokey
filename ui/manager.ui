@@ -655,8 +655,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>510</width>
-             <height>100</height>
+             <width>988</width>
+             <height>467</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout_2">
@@ -681,13 +681,34 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Keyword</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="lineEdit_keyword">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Activation Keyword&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
              <widget class="QCheckBox" name="checkBox_pa_flush">
               <property name="toolTip">
                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Flush the pulseaudio input buffer between recordings.&lt;/p&gt;&lt;p&gt;This is &lt;span style=&quot; font-weight:600;&quot;&gt;not recommended&lt;/span&gt; as it will put gaps in the voice recognition, thus making Vokey miss some commands.&lt;/p&gt;&lt;p&gt;However, it could help in case the voice recognition can't keep up with the audio being recorded.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Flush input buffer between recordings (NOT RECOMMENDED)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="checkBox_keyword">
+              <property name="text">
+               <string>Require Activation Keyword</string>
               </property>
              </widget>
             </item>

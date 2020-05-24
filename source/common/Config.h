@@ -18,7 +18,7 @@
 #ifndef Config_h
 #define Config_h
 
-#define VOKEY_CONFIG_VERSION 2
+#define VOKEY_CONFIG_VERSION 3
 
 #include <fstream>
 #include <iostream>
@@ -38,6 +38,7 @@ inline std::string config_location = std::string(getenv("HOME")) + "/.config/vok
 
 // Header
 void ensure_config_exists(void);
+json ensure_config_compatibility(json conf);
 std::string get_default_profile_filename(void);
 void load_config(void);
 void reset_config_to_default(void);
@@ -65,6 +66,19 @@ inline void ensure_config_exists() {
 	}
 }
 
+// Ensure config compatibility by going through every iteration of Vokey's config standard
+inline json ensure_config_compatibility(json conf) {
+	if (conf["version"] <= 2) {
+		// Version 3 introduced activation keyword
+		conf["keyword"] = "computer";
+		conf["use_keyword"] = true;
+		conf["version"] = 3;
+	}
+
+	// Return the updated config
+	return conf;
+}
+
 inline std::string get_default_profile_filename() {
 	return std::string(config["default_profile"]);
 }
@@ -77,7 +91,7 @@ inline void load_config() {
 	temp.assign( (std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()));
 	ifs.close();
 
-	config = json::parse(temp);
+	config = ensure_config_compatibility(json::parse(temp));
 }
 
 // Replace config with default values
@@ -87,7 +101,9 @@ inline void reset_config_to_default() {
 		{"version", VOKEY_CONFIG_VERSION},
 		{"default_profile", "default_profile.json"},
 		{"use_pulseaudio_flush", false},
-		{"listening_on_startup", true}
+		{"listening_on_startup", true},
+		{"keyword", "computer"},
+		{"use_keyword", true}
 	};
 }
 

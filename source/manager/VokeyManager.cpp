@@ -284,6 +284,10 @@ void discard_global_settings() {
 		ui_manager->lineEdit_default_profile->setText(QString::fromStdString(config["default_profile"]));
 	if (config["listening_on_startup"] != NULL)
 		ui_manager->checkBox_global_listening->setChecked(config["listening_on_startup"]);
+	if (config["use_keyword"] != NULL)
+		ui_manager->checkBox_keyword->setChecked(config["use_keyword"]);
+	if (config["keyword"] != NULL)
+		ui_manager->lineEdit_keyword->setText(QString::fromStdString(config["keyword"]));
 	if (config["use_pulseaudio_flush"] != NULL)
 		ui_manager->checkBox_pa_flush->setChecked(config["use_pulseaudio_flush"]);
 }
@@ -666,6 +670,8 @@ void save_config_profile() {
 void save_global_settings() {
 	config["default_profile"] = ui_manager->lineEdit_default_profile->text().toStdString();
 	config["listening_on_startup"] = ui_manager->checkBox_global_listening->isChecked();
+	config["use_keyword"] = ui_manager->checkBox_keyword->isChecked();
+	config["keyword"] = ui_manager->lineEdit_keyword->text().toStdString();
 	config["use_pulseaudio_flush"] = ui_manager->checkBox_pa_flush->isChecked();
 	save_config();
 }

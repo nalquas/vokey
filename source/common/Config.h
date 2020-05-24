@@ -70,7 +70,7 @@ inline void ensure_config_exists() {
 inline json ensure_config_compatibility(json conf) {
 	if (conf["version"] <= 2) {
 		// Version 3 introduced activation keyword
-		conf["keyword"] = "computer";
+		conf["keyword"] = "sphinx";
 		conf["use_keyword"] = true;
 		conf["version"] = 3;
 	}
@@ -102,7 +102,7 @@ inline void reset_config_to_default() {
 		{"default_profile", "default_profile.json"},
 		{"use_pulseaudio_flush", false},
 		{"listening_on_startup", true},
-		{"keyword", "computer"},
+		{"keyword", "sphinx"},
 		{"use_keyword", true}
 	};
 }

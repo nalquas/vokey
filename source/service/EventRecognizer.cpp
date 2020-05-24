@@ -34,7 +34,7 @@ int EventRecognizer::run() {
 			_profile = ensure_profile_compatibility(load_profile(_reload_profile_file_path));
 
 			// Create dictionary for the profile (for better accuracy)
-			// Make a list of all words used in commands in this profile
+			// Make a list of all words used in commands in this profile, plus the activation keyword from the global config
 			std::vector<std::string> commands = {};
 			for (int i = 0; i < _profile["events"].size(); i++) {
 				for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
@@ -47,6 +47,8 @@ int EventRecognizer::run() {
 					}
 				}
 			}
+			if (config["keyword"] != "")
+				commands.push_back(config["keyword"]);
 			// Load default dictionary from disk
 			std::string temp = "";
 			std::ifstream f(MODELDIR "/en-us/cmudict-en-us.dict");

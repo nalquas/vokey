@@ -77,8 +77,14 @@ void about_open(void);
 void about_close(void);
 void add_event(void);
 void remove_selected_event(void);
+void duplicate_selected_event(void);
+void move_selected_event_up(void);
+void move_selected_event_down(void);
 void add_action(void);
 void remove_selected_action(void);
+void duplicate_selected_action(void);
+void move_selected_action_up(void);
+void move_selected_action_down(void);
 void reload_profile(void);
 void discard_global_settings(void);
 json get_action(std::string id);
@@ -171,8 +177,14 @@ int main(int argc, char **argv) {
 	QObject::connect(ui_manager->listWidget_action, &QListWidget::itemClicked, refresh_action_selected_dumb);
 	QObject::connect(ui_manager->pushButton_add_event, &QPushButton::clicked, add_event);
 	QObject::connect(ui_manager->pushButton_remove_event, &QPushButton::clicked, remove_selected_event);
+	QObject::connect(ui_manager->pushButton_duplicate_event, &QPushButton::clicked, duplicate_selected_event);
+	QObject::connect(ui_manager->pushButton_up_event, &QPushButton::clicked, move_selected_event_up);
+	QObject::connect(ui_manager->pushButton_down_event, &QPushButton::clicked, move_selected_event_down);
 	QObject::connect(ui_manager->pushButton_add_action, &QPushButton::clicked, add_action);
 	QObject::connect(ui_manager->pushButton_remove_action, &QPushButton::clicked, remove_selected_action);
+	QObject::connect(ui_manager->pushButton_duplicate_action, &QPushButton::clicked, duplicate_selected_action);
+	QObject::connect(ui_manager->pushButton_up_action, &QPushButton::clicked, move_selected_action_up);
+	QObject::connect(ui_manager->pushButton_down_action, &QPushButton::clicked, move_selected_action_down);
 	QObject::connect(ui_manager->pushButton_open_config_folder, &QPushButton::clicked, open_config_folder);
 	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Save), &QPushButton::clicked, save_config_profile);
 	QObject::connect(ui_manager->buttonBox_config->button(QDialogButtonBox::Discard), &QPushButton::clicked, reload_profile);
@@ -219,8 +231,8 @@ void add_event() {
 	refresh_event_list();
 }
 
+// Remove the selected event from the list
 void remove_selected_event() {
-	// Remove the selected event from the list
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
 		if (selected_profile["events"][i]["id"] == selected_event) {
 			selected_profile["events"].erase(i);
@@ -230,6 +242,38 @@ void remove_selected_event() {
 			break;
 		}
 	}
+}
+
+// Duplicate the selected event in the list
+void duplicate_selected_event() {
+	// First, refresh the selected event so that changes are stored in profile
+	refresh_event_selected();
+
+	// Secondly, duplicate the event
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Modify a copy of the selected event and give it new unique identifiers
+			json temp = selected_profile["events"][i];
+			temp["id"] = generate_unique_identifier();
+			for (int j = 0; j < temp["actions"].size(); j++) {
+				temp["actions"][j]["id"] = generate_unique_identifier();
+			}
+
+			selected_profile["events"].push_back(temp);
+			break;
+		}
+	}
+
+	// Thirdly, refresh the event list to show the duplicated event
+	refresh_event_list();
+}
+
+void move_selected_event_up() {
+	// TODO
+}
+
+void move_selected_event_down() {
+	// TODO
 }
 
 void add_action() {
@@ -250,8 +294,8 @@ void add_action() {
 	refresh_action_list();
 }
 
+// Remove the selected action from the list
 void remove_selected_action() {
-	// Remove the selected action from the list
 	for (int i = 0; i < selected_profile["events"].size(); i++) {
 		// Find the correct event
 		if (selected_profile["events"][i]["id"] == selected_event) {
@@ -269,6 +313,42 @@ void remove_selected_action() {
 			break;
 		}
 	}
+}
+
+// Duplicate the selected action in the list
+void duplicate_selected_action() {
+	// First, refresh the selected event so that changes are stored in profile
+	refresh_action_selected();
+
+	// Secondly, duplicate the event
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		// Find the correct event
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Find the correct action
+			for (int j = 0; j < selected_profile["events"][i]["actions"].size(); j++) {
+				if (selected_profile["events"][i]["actions"][j]["id"] == selected_action) {
+					// Modify a copy of the selected action and give it a new unique identifier
+					json temp = selected_profile["events"][i]["actions"][j];
+					temp["id"] = generate_unique_identifier();
+
+					selected_profile["events"][i]["actions"].push_back(temp);
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	// Thirdly, refresh the action list to show the duplicated action
+	refresh_action_list();
+}
+
+void move_selected_action_up() {
+	// TODO
+}
+
+void move_selected_action_down() {
+	// TODO
 }
 
 void reload_profile() {

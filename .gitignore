@@ -9,3 +9,6 @@ source/manager/ui/**.h
 
 # Ignore local Visual Studio Code configs
 **/.vscode/**
+
+# Ignore LMMS temporary files
+**/*.mmpz.bak

@@ -41,9 +41,14 @@ install:
 	install -Dm755 vokey_manager $(DESTDIR)/usr/bin/vokey_manager
 	install -Dm644 "desktop/Vokey Manager.desktop" "$(DESTDIR)/usr/share/applications/Vokey Manager.desktop"
 	install -Dm644 desktop/vokey.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/vokey.svg
+	install -Dm644 sounds/listening_begin.wav $(DESTDIR)/usr/share/sounds/vokey/listening_begin.wav
+	install -Dm644 sounds/listening_end.wav $(DESTDIR)/usr/share/sounds/vokey/listening_end.wav
 
 uninstall:
-	if test -f "/usr/bin/vokey_service"; then rm /usr/bin/vokey_service; fi
-	if test -f "/usr/bin/vokey_manager"; then rm /usr/bin/vokey_manager; fi
-	if test -f "/usr/share/applications/Vokey Manager.desktop"; then rm "/usr/share/applications/Vokey Manager.desktop"; fi
-	if test -f "/usr/share/icons/hicolor/scalable/apps/vokey.svg"; then rm /usr/share/icons/hicolor/scalable/apps/vokey.svg; fi
+	if test -f "$(DESTDIR)/usr/bin/vokey_service"; then rm $(DESTDIR)/usr/bin/vokey_service; fi
+	if test -f "$(DESTDIR)/usr/bin/vokey_manager"; then rm $(DESTDIR)/usr/bin/vokey_manager; fi
+	if test -f "$(DESTDIR)/usr/share/applications/Vokey Manager.desktop"; then rm "$(DESTDIR)/usr/share/applications/Vokey Manager.desktop"; fi
+	if test -f "$(DESTDIR)/usr/share/icons/hicolor/scalable/apps/vokey.svg"; then rm $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/vokey.svg; fi
+	if test -f "$(DESTDIR)/usr/share/sounds/vokey/listening_begin.wav"; then rm $(DESTDIR)/usr/share/sounds/vokey/listening_begin.wav; fi
+	if test -f "$(DESTDIR)/usr/share/sounds/vokey/listening_end.wav"; then rm $(DESTDIR)/usr/share/sounds/vokey/listening_end.wav; fi
+	if test -d "$(DESTDIR)/usr/share/sounds/vokey"; then rmdir $(DESTDIR)/usr/share/sounds/vokey; fi

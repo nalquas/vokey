@@ -94,7 +94,13 @@ int EventRecognizer::run() {
 				activated = _vr.wait_for_keyword();
 				
 				if (activated) {
-					// TODO: Play listening begin sound
+					// Play listening begin sound
+					if (stat(VOKEY_SOUND_LISTENING_BEGIN, &st) != -1) {
+						_action.play_audio(VOKEY_SOUND_LISTENING_BEGIN);
+					}
+					else {
+						print_log(std::string(VOKEY_SOUND_LISTENING_BEGIN) + " can not be played. Has Vokey been installed correctly?\n");
+					}
 				}
 			}
 
@@ -103,7 +109,13 @@ int EventRecognizer::run() {
 				if (_vr.process_microphone(true) != 0) return -1;
 				
 				if (config["use_keyword"]) {
-					// TODO: Play listening end sound
+					// Play listening end sound
+					if (stat(VOKEY_SOUND_LISTENING_END, &st) != -1) {
+						_action.play_audio(VOKEY_SOUND_LISTENING_END);
+					}
+					else {
+						print_log(std::string(VOKEY_SOUND_LISTENING_END) + " can not be played. Has Vokey been installed correctly?\n");
+					}
 				}
 
 				// Text handling

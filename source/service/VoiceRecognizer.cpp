@@ -101,7 +101,7 @@ bool VoiceRecognizer::wait_for_keyword() {
 	_hyp = ps_get_hyp(_ps, &_score);
 	if (_hyp != NULL) {
 		_text = std::string(_hyp);
-		print_log("\n[INFO] Recognized keyword \"" + _text + "\"");
+		print_log("\n[INFO] Recognized keyword \"" + _text + "\"\n");
 		return true;
 	}
 	else {

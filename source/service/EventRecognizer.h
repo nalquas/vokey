@@ -32,6 +32,9 @@
 #include "Action.h"
 #include "VoiceRecognizer.h"
 
+#define VOKEY_SOUND_LISTENING_BEGIN "/usr/share/sounds/vokey/listening_begin.wav"
+#define VOKEY_SOUND_LISTENING_END "/usr/share/sounds/vokey/listening_end.wav"
+
 #define IGNORE_SCORE_TRESHOLD -10000
 
 using json = nlohmann::json;

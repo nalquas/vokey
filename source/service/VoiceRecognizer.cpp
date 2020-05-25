@@ -79,84 +79,73 @@ VoiceRecognizer::~VoiceRecognizer() {
 	if (_ps_config != NULL) cmd_ln_free_r(_ps_config);
 }
 
+bool VoiceRecognizer::wait_for_keyword() {
+	// Check for keyword
+	ps_set_search(_ps, "keysearch");
+	_rv = ps_start_utt(_ps);
+	
+	_in_speech = FALSE;
+	_utt_started = FALSE;
+	while (!(!_in_speech && _utt_started)) {
+		size_t nsamp = 2048 / sizeof(int16);
+		pa_simple_read(_pulse, _buf, 2048, NULL);
+		ps_process_raw(_ps, _buf, nsamp, FALSE, FALSE);
+
+		_in_speech = ps_get_in_speech(_ps);
+		if (_in_speech && !_utt_started) {
+			_utt_started = TRUE;
+		}
+	}
+
+	_rv = ps_end_utt(_ps);
+	_hyp = ps_get_hyp(_ps, &_score);
+	if (_hyp != NULL) {
+		_text = std::string(_hyp);
+		print_log("\n[INFO] Recognized keyword \"" + _text + "\"");
+		return true;
+	}
+	else {
+		_text = "";
+		return false;
+	}
+}
+
 int VoiceRecognizer::process_microphone(bool process) {
 	if (process) {
-		// Boolean for whether keyword activation has been completed or not
-		bool activated = false;
-		if (config["use_keyword"]) {
-			// Check for keyword
-			ps_set_search(_ps, "keysearch");
-			_rv = ps_start_utt(_ps);
-			
-			_in_speech = FALSE;
-			_utt_started = FALSE;
-			while (!(!_in_speech && _utt_started)) {
-				size_t nsamp = 2048 / sizeof(int16);
-				pa_simple_read(_pulse, _buf, 2048, NULL);
-				ps_process_raw(_ps, _buf, nsamp, FALSE, FALSE);
+		// Full dictionary recognition (-> command recognition)
+		ps_set_search(_ps, "fullsearch");
+		_rv = ps_start_utt(_ps);
+		
+		print_log("\n[INFO] Starting recording\n");
 
-				_in_speech = ps_get_in_speech(_ps);
-				if (_in_speech && !_utt_started) {
-					_utt_started = TRUE;
-				}
+		_in_speech = FALSE;
+		_utt_started = FALSE;
+		while (!(!_in_speech && _utt_started)) {
+			size_t nsamp = 2048 / sizeof(int16);
+			pa_simple_read(_pulse, _buf, 2048, NULL);
+			ps_process_raw(_ps, _buf, nsamp, FALSE, FALSE);
+
+			_in_speech = ps_get_in_speech(_ps);
+			if (_in_speech && !_utt_started) {
+				_utt_started = TRUE;
 			}
 
-			_rv = ps_end_utt(_ps);
-			_hyp = ps_get_hyp(_ps, &_score);
-			if (_hyp != NULL) {
-				_text = std::string(_hyp);
-				print_log("[INFO] Recognized keyword \"" + _text + "\"");
-				activated = true;
-			}
-			else {
-				_text = "";
-			}
-		}
-		else {
-			// No keyword required, skip
-			activated = true;
+			// This is commented out for now because it seems to cause segmentation faults
+			/*if (_finish_requested) {
+				_finish_requested = false;
+				break;
+			}*/
 		}
 
-		if (activated) {
-			// Full dictionary recognition (-> command recognition)
-			ps_set_search(_ps, "fullsearch");
-			_rv = ps_start_utt(_ps);
-			
-			print_log("\n[INFO] Starting recording\n");
+		// If activated in the config, flush the pulseaudio input buffer after each recognition
+		if (config["use_pulseaudio_flush"] != NULL && config["use_pulseaudio_flush"])
+			pa_simple_flush(_pulse, NULL);
 
-			_in_speech = FALSE;
-			_utt_started = FALSE;
-			while (!(!_in_speech && _utt_started)) {
-				size_t nsamp = 2048 / sizeof(int16);
-				pa_simple_read(_pulse, _buf, 2048, NULL);
-				ps_process_raw(_ps, _buf, nsamp, FALSE, FALSE);
+		print_log("[INFO] Finished recording\n");
 
-				_in_speech = ps_get_in_speech(_ps);
-				if (_in_speech && !_utt_started) {
-					_utt_started = TRUE;
-				}
-
-				// This is commented out for now because it seems to cause segmentation faults
-				/*if (_finish_requested) {
-					_finish_requested = false;
-					break;
-				}*/
-			}
-
-			// If activated in the config, flush the pulseaudio input buffer after each recognition
-			if (config["use_pulseaudio_flush"] != NULL && config["use_pulseaudio_flush"])
-				pa_simple_flush(_pulse, NULL);
-
-			print_log("[INFO] Finished recording\n");
-
-			_rv = ps_end_utt(_ps);
-			_hyp = ps_get_hyp(_ps, &_score);
-			_text = _hyp;
-		}
-		else {
-			_score = INT_MIN;
-			_text = "NO KEYWORD RECOGNIZED";
-		}
+		_rv = ps_end_utt(_ps);
+		_hyp = ps_get_hyp(_ps, &_score);
+		_text = _hyp;
 	}
 	else {
 		// We're not supposed to process, so let's just continue reading and discarding data from the microphone...

@@ -87,67 +87,85 @@ int EventRecognizer::run() {
 		// Handle listening
 		if (_listening) {
 			// Voice processing
-			if (_vr.process_microphone(true) != 0) return -1;
 
-			// Text handling
-			print_log("[INFO] Text: " + _vr.get_text() + " (Score: " + std::to_string(_vr.get_score()) + ")\n");
+			// Wait for keyword
+			bool activated = true;
+			if (config["use_keyword"]) {
+				activated = _vr.wait_for_keyword();
+				
+				if (activated) {
+					// TODO: Play listening begin sound
+				}
+			}
 
-			// Only proceed if pocketsphinx is confident enough that the text is correct
-			if (_vr.get_score() > IGNORE_SCORE_TRESHOLD) {
-				// Check for all possible events
-				bool any_event_activated = false;
-				for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
-					// Check for all possible commands
-					for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
-						if (strstr(_vr.get_text().c_str(), std::string(_profile["events"][i]["commands"][j]).c_str())) {
-							// Text matched one of the commands of this event
-							print_log("[EVENT] Triggered " + std::string(_profile["events"][i]["title"]) + "\n");
-							
-							// Activate all specified actions
-							for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
-								switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
-								{
-								case action_execute:
-									_action.execute(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-									break;
-								case action_print:
-									_action.print(std::string(_profile["events"][i]["actions"][k]["parameter"]));
-									break;
-								case action_bell:
-									_action.bell();
-									break;
-								case action_play_audio:
-									_action.play_audio(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-									break;
-								case action_speak:
-									_action.speak(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
-									break;
-								case action_key:
-									try
+			// If keyword was recognized (or is not required), try to recognize a command
+			if (activated) {
+				if (_vr.process_microphone(true) != 0) return -1;
+				
+				if (config["use_keyword"]) {
+					// TODO: Play listening end sound
+				}
+
+				// Text handling
+				print_log("[INFO] Text: " + _vr.get_text() + " (Score: " + std::to_string(_vr.get_score()) + ")\n");
+
+				// Only proceed if pocketsphinx is confident enough that the text is correct
+				if (_vr.get_score() > IGNORE_SCORE_TRESHOLD) {
+					// Check for all possible events
+					bool any_event_activated = false;
+					for (int i = 0; i < _profile["events"].size() && !any_event_activated; i++) {
+						// Check for all possible commands
+						for (int j = 0; j < _profile["events"][i]["commands"].size(); j++) {
+							if (strstr(_vr.get_text().c_str(), std::string(_profile["events"][i]["commands"][j]).c_str())) {
+								// Text matched one of the commands of this event
+								print_log("[EVENT] Triggered " + std::string(_profile["events"][i]["title"]) + "\n");
+								
+								// Activate all specified actions
+								for (int k = 0; k < _profile["events"][i]["actions"].size(); k++) {
+									switch (get_action_type(std::string(_profile["events"][i]["actions"][k]["type"])))
 									{
-										_action.press_key(stoi(std::string(_profile["events"][i]["actions"][k]["parameter"])));
+									case action_execute:
+										_action.execute(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+										break;
+									case action_print:
+										_action.print(std::string(_profile["events"][i]["actions"][k]["parameter"]));
+										break;
+									case action_bell:
+										_action.bell();
+										break;
+									case action_play_audio:
+										_action.play_audio(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+										break;
+									case action_speak:
+										_action.speak(std::string(_profile["events"][i]["actions"][k]["parameter"]).c_str());
+										break;
+									case action_key:
+										try
+										{
+											_action.press_key(stoi(std::string(_profile["events"][i]["actions"][k]["parameter"])));
+										}
+										catch(const std::exception& e)
+										{
+											print_log("Invalid parameter for action \"key\": " + std::string(_profile["events"][i]["actions"][k]["parameter"]) + "\n");
+											std::cerr << e.what() << '\n';
+										}
+										break;
+									default:
+										print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
+										break;
 									}
-									catch(const std::exception& e)
-									{
-										print_log("Invalid parameter for action \"key\": " + std::string(_profile["events"][i]["actions"][k]["parameter"]) + "\n");
-										std::cerr << e.what() << '\n';
-									}
-									break;
-								default:
-									print_log("[WARNING] Unhandled action type \"" + std::string(_profile["events"][i]["actions"][k]["type"]) + "\"\n");
-									break;
 								}
+								
+								// Don't check for any other accepted commands of this event
+								any_event_activated = true;
+								break;
 							}
-							
-							// Don't check for any other accepted commands of this event
-							any_event_activated = true;
-							break;
 						}
 					}
 				}
-			}
-			else {
-				print_log("[INFO] Score too low, ignoring...\n");
+				else {
+					print_log("[INFO] Score too low, ignoring...\n");
+				}
 			}
 		}
 		else {

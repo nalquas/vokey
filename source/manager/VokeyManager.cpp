@@ -269,11 +269,47 @@ void duplicate_selected_event() {
 }
 
 void move_selected_event_up() {
-	// TODO
+	// First, refresh the selected event so that changes are stored in profile
+	refresh_event_selected();
+
+	// Secondly, move the event up
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// If this is not the first event in the list...
+			if (i > 0) {
+				// Swap the selected event with the previous one (thus moving it up)
+				json temp = selected_profile["events"][i];
+				selected_profile["events"][i] = selected_profile["events"][i-1];
+				selected_profile["events"][i-1] = temp;
+			}
+			break;
+		}
+	}
+
+	// Thirdly, refresh the event list to show the moved event
+	refresh_event_list();
 }
 
 void move_selected_event_down() {
-	// TODO
+	// First, refresh the selected event so that changes are stored in profile
+	refresh_event_selected();
+
+	// Secondly, move the event up
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// If this is not the last event in the list...
+			if (i < selected_profile["events"].size() - 1) {
+				// Swap the selected event with the next one (thus moving it down)
+				json temp = selected_profile["events"][i];
+				selected_profile["events"][i] = selected_profile["events"][i+1];
+				selected_profile["events"][i+1] = temp;
+			}
+			break;
+		}
+	}
+
+	// Thirdly, refresh the event list to show the moved event
+	refresh_event_list();
 }
 
 void add_action() {
@@ -317,7 +353,7 @@ void remove_selected_action() {
 
 // Duplicate the selected action in the list
 void duplicate_selected_action() {
-	// First, refresh the selected event so that changes are stored in profile
+	// First, refresh the selected action so that changes are stored in profile
 	refresh_action_selected();
 
 	// Secondly, duplicate the event
@@ -344,11 +380,61 @@ void duplicate_selected_action() {
 }
 
 void move_selected_action_up() {
-	// TODO
+	// First, refresh the selected action so that changes are stored in profile
+	refresh_action_selected();
+
+	// Secondly, duplicate the event
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		// Find the correct event
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Find the correct action
+			for (int j = 0; j < selected_profile["events"][i]["actions"].size(); j++) {
+				if (selected_profile["events"][i]["actions"][j]["id"] == selected_action) {
+					// If this is not the first action in the list...
+					if (j > 0) {
+						// Swap the selected action with the previous one (thus moving it up)
+						json temp = selected_profile["events"][i]["actions"][j];
+						selected_profile["events"][i]["actions"][j] = selected_profile["events"][i]["actions"][j-1];
+						selected_profile["events"][i]["actions"][j-1] = temp;
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	// Thirdly, refresh the action list to show the moved action
+	refresh_action_list();
 }
 
 void move_selected_action_down() {
-	// TODO
+	// First, refresh the selected action so that changes are stored in profile
+	refresh_action_selected();
+
+	// Secondly, duplicate the event
+	for (int i = 0; i < selected_profile["events"].size(); i++) {
+		// Find the correct event
+		if (selected_profile["events"][i]["id"] == selected_event) {
+			// Find the correct action
+			for (int j = 0; j < selected_profile["events"][i]["actions"].size(); j++) {
+				if (selected_profile["events"][i]["actions"][j]["id"] == selected_action) {
+					// If this is not the last action in the list...
+					if (j < selected_profile["events"][i]["actions"].size() - 1) {
+						// Swap the selected action with the previous one (thus moving it up)
+						json temp = selected_profile["events"][i]["actions"][j];
+						selected_profile["events"][i]["actions"][j] = selected_profile["events"][i]["actions"][j+1];
+						selected_profile["events"][i]["actions"][j+1] = temp;
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+
+	// Thirdly, refresh the action list to show the moved action
+	refresh_action_list();
 }
 
 void reload_profile() {

@@ -10,5 +10,8 @@ source/manager/ui/**.h
 # Ignore local Visual Studio Code configs
 **/.vscode/**
 
+# Ignore JetBrains Clion configs
+.idea
+
 # Ignore LMMS temporary files
 **/*.mmpz.bak

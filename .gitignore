@@ -3,6 +3,7 @@
 **/*.out
 vokey_service
 vokey_manager
+build
 
 # Ignore compiled .ui files
 source/manager/ui/**.h

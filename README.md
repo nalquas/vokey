@@ -33,33 +33,11 @@ vokey_manager
 
 ## Installation
 ### AUR
-You can get Vokey from the AUR:
+If you're on Arch-based systems, you can get Vokey from the AUR:
 https://aur.archlinux.org/packages/vokey-git/
 
-### make
-If you prefer a manual install, you can use make. You can get pre-compiled binaries on the [release page](https://github.com/nalquas/vokey/releases).
-
-You will have to install the necessary dependencies yourself:
-
-```
-# On Ubuntu (20.04) systems, install the dependencies using:
-sudo apt install alsa-utils festival pocketsphinx pocketsphinx-en-us
-
-# On Arch-based systems, install the dependencies using:
-sudo pacman -Syu qt5-base pulseaudio alsa-utils festival festival-english
-# Pocketsphinx is not in the Arch repositories, you'll have to get it from the AUR:
-# https://aur.archlinux.org/packages/pocketsphinx
-# https://aur.archlinux.org/packages/sphinxbase/
-```
-
-Assuming you have the compiled binaries, you can install Vokey on your system by executing:
-
-```
-make install
-```
-
 ## Compilation
-You need to have the following libraries installed to your system to compile Vokey:
+You must have the following libraries installed to your system to compile Vokey yourself:
 
 - [JSON for Modern C++](https://github.com/nlohmann/json)
 - [Pocketsphinx](https://github.com/cmusphinx/pocketsphinx) and [Sphinxbase](https://github.com/cmusphinx/sphinxbase)
@@ -77,8 +55,16 @@ sudo pacman -Syu base-devel qt5-base pulseaudio alsa-utils festival festival-eng
 # https://aur.archlinux.org/packages/sphinxbase/
 ```
 
-To compile the project, simply execute:
+To compile the project, follow these steps:
 
 ```
-make
+mkdir build
+cd build
+cmake ..
+
+# If you want to install the project without a package manager:
+sudo make install
+
+# If you're a package maintainer and want to "install" in a packaging-friendly way:
+make install DESTDIR=<Your package directory here>
 ```

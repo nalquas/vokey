@@ -46,8 +46,8 @@
 #include "../common/Config.h"
 #include "../common/Communication.h"
 #include "../common/Profile.h"
-#include "ui/manager.h"
-#include "ui/about.h"
+#include "ui_manager.h"
+#include "ui_about.h"
 
 using json = nlohmann::json;
 

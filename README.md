@@ -65,10 +65,11 @@ To compile the project, follow these steps:
 # If you're on Ubuntu 20.04 (Workaround for wrong pkg-config configuration of the official pocketsphinx package):
 sudo mkdir /usr/include/sphinxbase
 
-# Prepare the build process
+# Build
 mkdir build
 cd build
 cmake ..
+make
 
 # If you want to install the project without a package manager:
 sudo make install

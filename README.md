@@ -1,3 +1,4 @@
+[![CMake](https://github.com/nalquas/vokey/actions/workflows/cmake.yml/badge.svg?branch=master)](https://github.com/nalquas/vokey/actions/workflows/cmake.yml)
 # Vokey
 ```
 .          .  __________   __    _____  ___________  __      __
@@ -35,6 +36,9 @@ vokey_manager
 ### AUR
 If you're on Arch-based systems, you can get Vokey from the AUR:
 https://aur.archlinux.org/packages/vokey-git/
+```
+yay -S vokey-git
+```
 
 ## Compilation
 You must have the following libraries installed to your system to compile Vokey yourself:
@@ -46,7 +50,7 @@ You must have the following libraries installed to your system to compile Vokey 
 
 ```
 # On Ubuntu (20.04) systems, install the necessary dev packages and dependencies using:
-sudo apt install build-essential qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libsphinxbase3 libpocketsphinx-dev alsa-utils festival nlohmann-json-dev
+sudo apt install build-essential git qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libpocketsphinx-dev libsphinxbase3 libsphinxbase-dev alsa-utils festival nlohmann-json3-dev libx11-dev libxtst-dev
 
 # On Arch-based systems, install the necessary dev packages and dependencies using:
 sudo pacman -Syu base-devel qt5-base pulseaudio alsa-utils festival festival-english nlohmann-json
@@ -58,6 +62,10 @@ sudo pacman -Syu base-devel qt5-base pulseaudio alsa-utils festival festival-eng
 To compile the project, follow these steps:
 
 ```
+# If you're on Ubuntu 20.04 (Workaround for wrong pkg-config configuration of the official pocketsphinx package):
+sudo mkdir /usr/include/sphinxbase
+
+# Prepare the build process
 mkdir build
 cd build
 cmake ..

@@ -32,8 +32,11 @@ pkg_check_modules(POCKETSPHINX REQUIRED IMPORTED_TARGET pocketsphinx)
 pkg_get_variable(MODELDIR pocketsphinx modeldir)
 target_compile_definitions(vokey_service PRIVATE MODELDIR="${MODELDIR}")
 
-# Link X11 and Pocketsphinx to vokey_service
-target_link_libraries(vokey_service PkgConfig::POCKETSPHINX X11::X11 X11::Xtst)
+# Find libpulse-simple
+pkg_check_modules(PULSESIMPLE REQUIRED IMPORTED_TARGET libpulse-simple)
+
+# Link X11, libpulse-simple and Pocketsphinx to vokey_service
+target_link_libraries(vokey_service PkgConfig::PULSESIMPLE PkgConfig::POCKETSPHINX X11::X11 X11::Xtst)
 
 # Installation
 install(TARGETS vokey_service vokey_manager RUNTIME DESTINATION /usr/bin)

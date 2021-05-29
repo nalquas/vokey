@@ -22,7 +22,12 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Install requirements
-      run: sudo apt-get update && sudo apt-get install build-essential qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libpocketsphinx-dev libsphinxbase3 libsphinxbase-dev alsa-utils festival nlohmann-json3-dev libx11-dev libxtst-dev -y
+      run: sudo apt-get update && sudo apt-get install build-essential git qt5-default libpulse-dev pocketsphinx pocketsphinx-en-us libpocketsphinx-dev libsphinxbase3 libsphinxbase-dev alsa-utils festival nlohmann-json3-dev libx11-dev libxtst-dev -y
+
+    - name: Workaround Ubuntu sphinxbase pkg-config
+      # Because the sphinxbase package in Ubuntu has a wrong pkg-config configuration, it requires this directory to exist.
+      # The actual included libraries are somewhere else and work anyway, so this is an upstream configuration issue to work around...
+      run: sudo mkdir /usr/include/sphinxbase
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

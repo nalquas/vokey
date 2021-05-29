@@ -28,16 +28,16 @@
 class VoiceRecognizer {
 public:
 	// Constructor, Destructor
-	VoiceRecognizer(void);
-	~VoiceRecognizer(void);
+	VoiceRecognizer();
+	~VoiceRecognizer();
 	
 	// Interfacing methods
 	bool wait_for_keyword();
 	int process_microphone(bool process);
-	std::string get_text(void);
-	int get_score(void);
-	void request_finish(void);
-	void reload(void);
+	std::string get_text();
+	int get_score();
+	void request_finish();
+	void reload();
 private:
 	bool _finish_requested;
 	// Results:
@@ -45,15 +45,15 @@ private:
 	int _score = 0;
 	
 	// Decoder variables:
-	ps_decoder_t *_ps = NULL;
-	cmd_ln_t *_ps_config = NULL;
+	ps_decoder_t *_ps = nullptr;
+	cmd_ln_t *_ps_config = nullptr;
 	char const *_hyp = "";
 	int16 _buf[2048];
 	int _rv = 0;
 	uint8_t _utt_started=FALSE, _in_speech=FALSE;
 
 	// Pulseaudio:
-	pa_simple *_pulse = NULL;
+	pa_simple *_pulse = nullptr;
 	pa_sample_spec _pulse_spec;
 };
 

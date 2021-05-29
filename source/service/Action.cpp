@@ -17,14 +17,14 @@
 
 #include "Action.h"
 
-Action::Action() {}
+Action::Action() = default;
 
 void Action::execute(const char* command) {
 	print_log("[INFO] Executing: " + std::string(command) + "\n");
 	system(command);
 }
 
-void Action::print(std::string text) {
+void Action::print(const std::string& text) {
 	print_log(text + "\n");
 }
 
@@ -52,7 +52,7 @@ void Action::speak(const char* text) {
 
 void Action::press_key(unsigned int keycode) {
 	// TODO: Support key combinations
-	Display *display = XOpenDisplay(NULL);
+	Display *display = XOpenDisplay(nullptr);
 	XTestFakeKeyEvent(display, keycode, true, 0);
 	XTestFakeKeyEvent(display, keycode, false, 0);
 	XFlush(display);

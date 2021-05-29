@@ -28,13 +28,13 @@
 
 class Action {
 public:
-	Action(void);
-	void execute(const char* command);
-	void print(std::string text);
-	void bell(void);
-	void play_audio(const char* file_path);
-	void speak(const char* text);
-	void press_key(unsigned int keycode);
+	Action();
+	static void execute(const char* command);
+    static void print(const std::string& text);
+    static void bell();
+    static void play_audio(const char* file_path);
+    static void speak(const char* text);
+    static void press_key(unsigned int keycode);
 };
 
 #endif

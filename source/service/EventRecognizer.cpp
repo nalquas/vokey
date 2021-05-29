@@ -190,7 +190,7 @@ int EventRecognizer::run() {
 	return 0;
 }
 
-int EventRecognizer::get_action_type(std::string s) {
+int EventRecognizer::get_action_type(const std::string& s) {
 	if (s == "execute") return action_execute;
 	if (s == "print") return action_print;
 	if (s == "bell") return action_bell;
@@ -223,10 +223,10 @@ void EventRecognizer::set_listening(bool listen) {
 	_listening = listen;
 }
 
-bool EventRecognizer::get_listening(void) {
+bool EventRecognizer::get_listening() {
 	return _listening;
 }
 
-std::string EventRecognizer::get_profile(void) {
+std::string EventRecognizer::get_profile() {
 	return _reload_profile_file_path;
 }

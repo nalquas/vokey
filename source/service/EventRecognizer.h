@@ -54,14 +54,14 @@ public:
 	EventRecognizer(std::string profile_file_path, bool listening);
 	
 	// Interfacing methods
-	void request_reload(void);
+	void request_reload();
 	void request_reload(std::string file_path);
 	void set_listening(bool listen);
-	bool get_listening(void);
-	std::string get_profile(void);
-	int run(void);
+	bool get_listening();
+	std::string get_profile();
+	int run();
 private:
-	int get_action_type(std::string s);
+	static int get_action_type(const std::string& s);
 	bool _listening;
 	Action _action;
 	json _profile;

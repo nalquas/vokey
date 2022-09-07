@@ -73,44 +73,44 @@ std::vector<std::string> ids_actions = {}; // Store the IDs of actions at the co
 
 // Function headers
 
-void about_open(void);
-void about_close(void);
-void add_event(void);
-void remove_selected_event(void);
-void duplicate_selected_event(void);
-void move_selected_event_up(void);
-void move_selected_event_down(void);
-void add_action(void);
-void remove_selected_action(void);
-void duplicate_selected_action(void);
-void move_selected_action_up(void);
-void move_selected_action_down(void);
-void reload_profile(void);
-void discard_global_settings(void);
+void about_open();
+void about_close();
+void add_event();
+void remove_selected_event();
+void duplicate_selected_event();
+void move_selected_event_up();
+void move_selected_event_down();
+void add_action();
+void remove_selected_action();
+void duplicate_selected_action();
+void move_selected_action_up();
+void move_selected_action_down();
+void reload_profile();
+void discard_global_settings();
 json get_action(std::string id);
 json get_event(std::string id);
 std::string get_action_id(int index);
 std::string get_event_id(int index);
 void refresh_action_list(std::string store_for_event_id = "");
-void refresh_action_list_dumb(void);
+void refresh_action_list_dumb();
 void refresh_action_selected(std::string store_for_event_id = "");
-void refresh_action_selected_dumb(void);
-void refresh_event_list(void);
-void refresh_event_selected(void);
-void refresh_log(void);
-void refresh_monitor(void);
-void refresh_profile_combos(void);
-void save_config_profile(void);
-void create_new_profile(void);
-void toggle_add_profile_dialog(void);
-void reset_global_settings(void);
-void save_global_settings(void);
-void service_start(void);
-void service_kill(void);
-void service_reload_profile(void);
-void service_set_listening(void);
-void open_config_folder(void);
-void quit(void);
+void refresh_action_selected_dumb();
+void refresh_event_list();
+void refresh_event_selected();
+void refresh_log();
+void refresh_monitor();
+void refresh_profile_combos();
+void save_config_profile();
+void create_new_profile();
+void toggle_add_profile_dialog();
+void reset_global_settings();
+void save_global_settings();
+void service_start();
+void service_kill();
+void service_reload_profile();
+void service_set_listening();
+void open_config_folder();
+void quit();
 
 // Function implementations
 
